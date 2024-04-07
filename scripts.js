@@ -2,6 +2,7 @@ let charactersCharacteristics = {};
 let characterIdCounter = generateUUID();
 let currentEditId = null;
 let currentEditField = null;
+let globalItems = [];
 
 document.getElementById('charImageInput').addEventListener('change', function() {
     // Здесь можно добавить логику обработки выбранного файла, если нужно
@@ -77,9 +78,7 @@ function loadJSON(path) {
     fetch('files/globalInventory.json')
         .then(response => response.json())
         .then(data => {
-            data.items.forEach(item => {
-                console.log(item);
-            });
+            globalItems = data.items;
         })
         .catch(error => console.error('Ошибка загрузки файла globalInventory.json:', error));
 }
@@ -133,6 +132,7 @@ function addCharacter() {
         saveCharacteristics(characterBox.id);
         playSound("cardAudio", 1);
         closeModal();
+        loadJSON();
     } else {
         alert('Пожалуйста, заполните все поля корректно.');
     }
@@ -148,7 +148,7 @@ function createInventoryButton(characterBox) {
 
     // Создаем иконку для кнопки (вместо "path/to/icon.png" подставьте путь к вашей иконке)
     const icon = document.createElement('img');
-    icon.src = 'path/to/icon.png'; // Путь к иконке
+    icon.src = 'img/inventory.png'; // Путь к иконке
     icon.alt = 'Inventory Icon'; // Альтернативный текст для иконки
     openInventoryButton.appendChild(icon);
 
@@ -159,13 +159,43 @@ function createInventoryButton(characterBox) {
 function openInventory(characterId) {
     const inventoryModal = document.getElementById('inventoryModal');
     const inventoryContent = document.getElementById('inventoryContent');
+    // Получаем список айтемов из charactersCharacteristics[charackterId][items]
+    const itemsList = charactersCharacteristics[characterId].items || [];
 
-    // Здесь можете добавить логику загрузки айтемов из файла или отображения уже загруженных айтемов
-    // Например, добавить элементы с информацией об айтемах в инвентаре
-    // Пример добавления элемента в инвентарь:
-    // const itemElement = document.createElement('div');
-    // itemElement.textContent = 'Название айтема';
-    // inventoryContent.appendChild(itemElement);
+    // Очищаем содержимое инвентаря перед загрузкой новых данных
+    inventoryContent.innerHTML = '';
+
+    // Отображаем список айтемов в инвентаре
+    itemsList.forEach(item => {
+        const itemElement = document.createElement('div');
+
+        // Создаем элемент для иконки айтема
+        const iconElement = document.createElement('img');
+        iconElement.src = item.iconBase64; // Предполагается, что в объекте айтема есть свойство "iconBase64"
+        iconElement.alt = item.name; // Альтернативный текст для иконки
+        iconElement.classList.add('item-icon'); // Добавляем класс для стилизации иконки
+        itemElement.appendChild(iconElement);
+
+        // Добавляем название и описание айтема
+        const itemName = document.createElement('p');
+        itemName.textContent = item.name;
+        const itemDescription = document.createElement('p');
+        itemDescription.textContent = item.description;
+
+        itemElement.appendChild(itemName);
+        itemElement.appendChild(itemDescription);
+
+        // Создаем кнопку удаления айтема
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('modal-btn', 'inventory-btn');
+        deleteBtn.textContent = 'Удалить';
+        deleteBtn.onclick = function() {
+            removeItemFromInventory(characterId, item.id); // Вызываем функцию удаления айтема из инвентаря
+        };
+        itemElement.appendChild(deleteBtn);
+
+        inventoryContent.appendChild(itemElement);
+    });
 
     inventoryModal.style.display = 'block'; // Показываем модальное окно при открытии инвентаря
 
@@ -178,8 +208,8 @@ function openInventory(characterId) {
     // Кнопка "Добавить предмет"
     const addItemBtn = document.getElementById('addItemBtn');
     addItemBtn.onclick = function() {
-        // Здесь можете добавить логику открытия списка доступных предметов для добавления в инвентарь
-        alert('Функция добавления предмета еще не реализована!');
+        // Открываем модальное окно с глобальными айтемами для выбора
+        openGlobalItemsModal(characterId);
     };
 
     // Закрытие модального окна при клике вне контента
@@ -188,6 +218,118 @@ function openInventory(characterId) {
             inventoryModal.style.display = 'none';
         }
     };
+}
+
+// Функция для удаления айтема из инвентаря по его ID
+function removeItemFromInventory(characterId, itemId) {
+    const characterInventory = charactersCharacteristics[characterId].items;
+    const index = characterInventory.findIndex(item => item.id === itemId);
+    if (index !== -1) {
+        characterInventory.splice(index, 1);
+        updateInventory(characterId); // Обновляем инвентарь после удаления айтема
+    }
+}
+
+// Функция открытия модального окна с глобальными айтемами для выбора
+function openGlobalItemsModal(characterId) {
+    const globalItemsModal = document.getElementById('globalItemsModal');
+    const globalItemsContent = document.getElementById('globalItemsContent');
+
+    // Очищаем содержимое модального окна перед загрузкой списка глобальных айтемов
+    globalItemsContent.innerHTML = '';
+
+    // Здесь можно загрузить список глобальных айтемов из файла или из другого источника данных
+    // const globalItemsList = [
+    //     { id: "3", name: "Меч", description: "Очень острый меч", iconBase64: "" },
+    //     { id: "4", name: "Щит", description: "Непробиваемый щит", iconBase64: "" },
+    //     // Добавьте другие глобальные айтемы по аналогии
+    // ];
+
+    globalItems = globalItems || [];
+
+    // Отображаем список глобальных айтемов в модальном окне
+    globalItems.forEach(item => {
+        const itemElement = document.createElement('div');
+
+        // Создаем элемент для иконки айтема
+        const iconElement = document.createElement('img');
+        iconElement.src = item.iconBase64;
+        iconElement.alt = item.name;
+        iconElement.classList.add('item-icon');
+        itemElement.appendChild(iconElement);
+
+        // Добавляем название и описание айтема
+        const itemName = document.createElement('p');
+        itemName.textContent = item.name;
+        const itemDescription = document.createElement('p');
+        itemDescription.textContent = item.description;
+
+        itemElement.appendChild(itemName);
+        itemElement.appendChild(itemDescription);
+
+        // Добавляем кнопку "Выбрать предмет" для каждого айтема
+        const selectItemBtn = document.createElement('button');
+        selectItemBtn.classList.add('modal-btn', 'inventory-btn');
+        selectItemBtn.textContent = 'Выбрать предмет';
+        selectItemBtn.onclick = function() {
+            // Добавляем выбранный айтем в временную переменную
+            charactersCharacteristics[characterId].items.push(item);
+            // Обновляем инвентарь после добавления айтема
+            updateInventory(characterId);
+            // Закрываем модальное окно с глобальными айтемами
+            globalItemsModal.style.display = 'none';
+        };
+
+        itemElement.appendChild(selectItemBtn);
+        globalItemsContent.appendChild(itemElement);
+    });
+
+    globalItemsModal.style.display = 'block'; // Показываем модальное окно с глобальными айтемами
+
+    // Кнопка для закрытия модального окна
+    const closeBtn = document.getElementsByClassName('close-modal')[1];
+    closeBtn.onclick = function() {
+        globalItemsModal.style.display = 'none'; // Закрываем модальное окно при нажатии на кнопку закрытия
+    };
+}
+
+// Функция для обновления инвентаря после добавления айтема
+function updateInventory(characterId) {
+    // Обновляем содержимое инвентаря на странице
+    const inventoryContent = document.getElementById('inventoryContent');
+    inventoryContent.innerHTML = ''; // Очищаем содержимое
+
+    // Отображаем список временных айтемов в инвентаре
+    charactersCharacteristics[characterId].items.forEach(item => {
+        const itemElement = document.createElement('div');
+
+        // Создаем элемент для иконки айтема
+        const iconElement = document.createElement('img');
+        iconElement.src = item.iconBase64;
+        iconElement.alt = item.name;
+        iconElement.classList.add('item-icon');
+        itemElement.appendChild(iconElement);
+
+        // Добавляем название и описание айтема
+        const itemName = document.createElement('p');
+        itemName.textContent = item.name;
+        const itemDescription = document.createElement('p');
+        itemDescription.textContent = item.description;
+
+        // Создаем кнопку удаления айтема
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('modal-btn', 'inventory-btn');
+        deleteBtn.textContent = 'Удалить';
+        deleteBtn.onclick = function() {
+            removeItemFromInventory(characterId, item.id); // Вызываем функцию удаления айтема из инвентаря
+        };
+
+        itemElement.appendChild(itemName);
+        itemElement.appendChild(itemDescription);
+        itemElement.appendChild(deleteBtn);
+
+        inventoryContent.appendChild(itemElement);
+    });
 }
 
 // Функция для создания кнопки сохранения
@@ -554,6 +696,7 @@ function saveCharacteristics(characterId, characterData) {
     const wisdom =  characterData ? characterData.wisdom : document.getElementById('wisdomInput').value;
     const charisma = characterData ? characterData.charisma : document.getElementById('charismaInput').value;
     const notes = characterData ? characterData.notes : document.getElementById('notesInput').value;
+    const items = characterData && characterData.items ? characterData.items : [];
 
     // Сохраняем характеристики в объекте charactersCharacteristics для данного персонажа
     charactersCharacteristics[characterId] = {
@@ -563,7 +706,8 @@ function saveCharacteristics(characterId, characterData) {
         intelligence,
         wisdom,
         charisma,
-        notes
+        notes,
+        items
     };
     calculateAndDisplayModifiers(charactersCharacteristics[characterId], characterId);
     playSound("diceAudio", 1);

@@ -674,3 +674,49 @@ body {
     max-width: 360px;
     min-width: 360px;
 }
+
+.open-inventory-button {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    left: -92px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.open-inventory-button img {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+#inventoryContent div, #globalItemsContent div {
+    display: flex;
+}
+
+#inventoryContent div img, #globalItemsContent div img{
+    width: 40px;
+    height: 40px;
+    margin: 10px 0px 10px 0px;
+}
+
+#inventoryContent div p, #globalItemsContent div p{
+    margin: 12px 5px 0px 5px;
+}
+
+#inventoryModal .modal-content, #globalItemsModal .modal-content {
+    max-height: 400px;
+}
+
+#inventoryContent, #globalItemsContent {
+    max-height: 300px;
+    overflow: overlay;
+}
+
+.modal-btn.inventory-btn {
+    font-size: 10pt;
+    padding: 2px;
+    height: 20px;
+    margin-top: 10px;
+}
