@@ -73,6 +73,24 @@ document.getElementsByClassName('close')[0].onclick = function() {
 //     }
 // }
 
+function loadJSON(path) {
+    // Предполагается, что у вас есть элемент для отображения инвентаря, например, <div id="inventory-character1"></div>
+    const inventoryContainer = document.getElementById('inventory-' + characterId);
+
+    // Здесь можно реализовать логику загрузки айтемов из файла globalInventory.json
+    fetch('files/globalInventory.json')
+        .then(response => response.json())
+        .then(data => {
+            // Допустим, что в файле globalInventory.json хранится массив объектов с информацией об айтемах
+            // Например, каждый объект может иметь поля name, type и description
+            // Теперь добавим айтемы из массива в инвентарь персонажа
+            data.forEach(item => {
+                console.log(item);
+            });
+        })
+        .catch(error => console.error('Ошибка загрузки файла globalInventory.json:', error));
+  }
+
 function openModal() {
     document.getElementById('modal').style.display = 'block';
     playSound("coinAudio", 1);
