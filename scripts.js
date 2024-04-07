@@ -74,22 +74,15 @@ document.getElementsByClassName('close')[0].onclick = function() {
 // }
 
 function loadJSON(path) {
-    // Предполагается, что у вас есть элемент для отображения инвентаря, например, <div id="inventory-character1"></div>
-    const inventoryContainer = document.getElementById('inventory-' + characterId);
-
-    // Здесь можно реализовать логику загрузки айтемов из файла globalInventory.json
     fetch('files/globalInventory.json')
         .then(response => response.json())
         .then(data => {
-            // Допустим, что в файле globalInventory.json хранится массив объектов с информацией об айтемах
-            // Например, каждый объект может иметь поля name, type и description
-            // Теперь добавим айтемы из массива в инвентарь персонажа
-            data.forEach(item => {
+            data.items.forEach(item => {
                 console.log(item);
             });
         })
         .catch(error => console.error('Ошибка загрузки файла globalInventory.json:', error));
-  }
+}
 
 function openModal() {
     document.getElementById('modal').style.display = 'block';
@@ -134,6 +127,7 @@ function addCharacter() {
         characterBorder.appendChild(createShieldBlock(characterBox, charShield));
         characterBorder.appendChild(createSaveButton(characterBox));
         characterBorder.appendChild(createDeleteButton(characterBox));
+        characterBorder.appendChild(createInventoryButton(characterBox));
         
         updateHPProgress(characterBox);
         saveCharacteristics(characterBox.id);
@@ -142,6 +136,58 @@ function addCharacter() {
     } else {
         alert('Пожалуйста, заполните все поля корректно.');
     }
+}
+
+// Функция создания кнопки "Открыть инвентарь" в виде иконки
+function createInventoryButton(characterBox) {
+    const openInventoryButton = document.createElement('button');
+    openInventoryButton.classList.add('open-inventory-button');
+    openInventoryButton.addEventListener('click', function() {
+        openInventory(characterBox.id); // Вызываем функцию открытия инвентаря для соответствующей карточки
+    });
+
+    // Создаем иконку для кнопки (вместо "path/to/icon.png" подставьте путь к вашей иконке)
+    const icon = document.createElement('img');
+    icon.src = 'path/to/icon.png'; // Путь к иконке
+    icon.alt = 'Inventory Icon'; // Альтернативный текст для иконки
+    openInventoryButton.appendChild(icon);
+
+    return openInventoryButton;
+}
+
+// Функция открытия модального окна с инвентарем для конкретной карточки
+function openInventory(characterId) {
+    const inventoryModal = document.getElementById('inventoryModal');
+    const inventoryContent = document.getElementById('inventoryContent');
+
+    // Здесь можете добавить логику загрузки айтемов из файла или отображения уже загруженных айтемов
+    // Например, добавить элементы с информацией об айтемах в инвентаре
+    // Пример добавления элемента в инвентарь:
+    // const itemElement = document.createElement('div');
+    // itemElement.textContent = 'Название айтема';
+    // inventoryContent.appendChild(itemElement);
+
+    inventoryModal.style.display = 'block'; // Показываем модальное окно при открытии инвентаря
+
+    // Кнопка для закрытия модального окна
+    const closeBtn = document.getElementsByClassName('close-modal')[0];
+    closeBtn.onclick = function() {
+        inventoryModal.style.display = 'none'; // Закрываем модальное окно при нажатии на кнопку закрытия
+    };
+
+    // Кнопка "Добавить предмет"
+    const addItemBtn = document.getElementById('addItemBtn');
+    addItemBtn.onclick = function() {
+        // Здесь можете добавить логику открытия списка доступных предметов для добавления в инвентарь
+        alert('Функция добавления предмета еще не реализована!');
+    };
+
+    // Закрытие модального окна при клике вне контента
+    window.onclick = function(event) {
+        if (event.target === inventoryModal) {
+            inventoryModal.style.display = 'none';
+        }
+    };
 }
 
 // Функция для создания кнопки сохранения
