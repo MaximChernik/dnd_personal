@@ -4,6 +4,8 @@ let currentEditId = null;
 let currentEditField = null;
 let globalItems = [];
 
+loadGlobalItems();
+
 document.getElementById('charImageInput').addEventListener('change', function() {
     // Здесь можно добавить логику обработки выбранного файла, если нужно
     console.log('Файл выбран:', this.files[0]);
@@ -74,7 +76,7 @@ document.getElementsByClassName('close')[0].onclick = function() {
 //     }
 // }
 
-function loadJSON(path) {
+function loadGlobalItems(path) {
     fetch('files/globalInventory.json')
         .then(response => response.json())
         .then(data => {
@@ -134,7 +136,6 @@ function addCharacter() {
         saveCharacteristics(characterBox.id);
         playSound("cardAudio", 1);
         closeModal();
-        loadJSON();
     } else {
         alert('Пожалуйста, заполните все поля корректно.');
     }
@@ -243,14 +244,6 @@ function openGlobalItemsModal(characterId) {
 
     // Очищаем содержимое модального окна перед загрузкой списка глобальных айтемов
     globalItemsContent.innerHTML = '';
-
-    // Здесь можно загрузить список глобальных айтемов из файла или из другого источника данных
-    // const globalItemsList = [
-    //     { id: "3", name: "Меч", description: "Очень острый меч", iconBase64: "" },
-    //     { id: "4", name: "Щит", description: "Непробиваемый щит", iconBase64: "" },
-    //     // Добавьте другие глобальные айтемы по аналогии
-    // ];
-
     globalItems = globalItems || [];
 
     // Отображаем список глобальных айтемов в модальном окне
@@ -703,7 +696,12 @@ function saveCharacteristics(characterId, characterData) {
     const wisdom =  characterData ? characterData.wisdom : document.getElementById('wisdomInput').value;
     const charisma = characterData ? characterData.charisma : document.getElementById('charismaInput').value;
     const notes = characterData ? characterData.notes : document.getElementById('notesInput').value;
-    const items = characterData && characterData.items ? characterData.items : charactersCharacteristics[characterId].items;
+    const items = characterData && characterData.items  
+        ? characterData.items 
+        : charactersCharacteristics[characterId]
+            ? charactersCharacteristics[characterId].items
+            : [];
+        ;
 
     // Сохраняем характеристики в объекте charactersCharacteristics для данного персонажа
     charactersCharacteristics[characterId] = {
