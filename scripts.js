@@ -115,7 +115,7 @@ firstObject.items.forEach(item => {
     if (matchedItem) {
       item.iconBase64 = matchedItem.iconBase64;
     }
-  });
+});
   
 return firstObject;
 }
