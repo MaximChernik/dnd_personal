@@ -117,16 +117,16 @@ function matchItemIcon(firstObject, secondObject) {
     }
 });
   
-// Функция для сортировки массива по имени (в алфавитном порядке)
-function sortItemsByName(items) {
-    return items.sort((a, b) => {
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
-    });
-}
+// // Функция для сортировки массива по имени (в алфавитном порядке)
+// function sortItemsByName(items) {
+//     return items.sort((a, b) => {
+//         const nameA = a.name.toLowerCase();
+//         const nameB = b.name.toLowerCase();
+//         if (nameA < nameB) return -1;
+//         if (nameA > nameB) return 1;
+//         return 0;
+//     });
+// }
 
 return firstObject;
 }
@@ -271,8 +271,7 @@ function openGlobalItemsModal(characterId) {
 
     // Очищаем содержимое модального окна перед загрузкой списка глобальных айтемов
     globalItemsContent.innerHTML = '';
-    globalItems = sortItemsByName(globalItems) || [];
-    
+    globalItems.sort((a, b) => a.name.localeCompare(b.name, 'en', { ignorePunctuation: true }));
     // Создаем элемент для поля поиска
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
@@ -281,7 +280,7 @@ function openGlobalItemsModal(characterId) {
     searchInput.addEventListener('input', function() {
         // Функция для обновления списка айтемов при изменении текста в поле поиска
         const searchTerm = searchInput.value.trim().toLowerCase();
-        filterItems(globalItems, characterId, searchInput.value.trim().toLowerCase(), globalItemsContent);
+        filterItems(globalItems, characterId, searchTerm, globalItemsContent);
     });
 
     // Добавляем поле поиска в модальное окно
