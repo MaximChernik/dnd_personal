@@ -721,10 +721,9 @@ function saveCharacteristics(characterId, characterData) {
     const items = characterData && characterData.items  
         ? characterData.items 
         : charactersCharacteristics[characterId]
-            ? charactersCharacteristics[characterId].items
+            ? charactersCharacteristics[characterId].items ? charactersCharacteristics[characterId].items: []
             : [];
         ;
-    charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
     // Сохраняем характеристики в объекте charactersCharacteristics для данного персонажа
     charactersCharacteristics[characterId] = {
         strength,
@@ -736,6 +735,7 @@ function saveCharacteristics(characterId, characterData) {
         notes,
         items
     };
+    charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
     calculateAndDisplayModifiers(charactersCharacteristics[characterId], characterId);
     playSound("diceAudio", 1);
     closeModal();
