@@ -765,6 +765,9 @@ body {
     min-height: 300px;
     margin: 0px 0px 20px 0px;
     overflow: overlay;
+    border-style: double;
+    border-width: 3px 0px 3px 0px;
+    border-color: #7d4400;
 }
 
 .modal-btn.inventory-btn {
