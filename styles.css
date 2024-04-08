@@ -787,6 +787,7 @@ body {
     border-style: double;
     border-width: 3px 0px 3px 0px;
     border-color: #7d4400;
+    cursor: pointer;
 }
 
 .modal-btn.inventory-btn {

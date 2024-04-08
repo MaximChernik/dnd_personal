@@ -270,47 +270,13 @@ function openGlobalItemsModal(characterId) {
     searchInput.addEventListener('input', function() {
         // Функция для обновления списка айтемов при изменении текста в поле поиска
         const searchTerm = searchInput.value.trim().toLowerCase();
-        filterItems(searchTerm);
+        filterItems(globalItems, characterId, searchInput.value.trim().toLowerCase(), globalItemsContent);
     });
 
     // Добавляем поле поиска в модальное окно
     searchWrap.appendChild(searchInput);
-
-    // Функция для фильтрации айтемов по поисковому запросу
-    function filterItems(searchTerm) {
-        // Очищаем содержимое модального окна перед фильтрацией
-        globalItemsContent.innerHTML = '';
-
-        if (searchTerm === '') {
-            // При пустом запросе отображаем все айтемы
-            globalItems.forEach(item => {
-                // Создаем элементы для каждого айтема
-                const itemElement = createItemElement(item, characterId, searchWrap);
-                globalItemsContent.appendChild(itemElement);
-            });
-        } else {
-            // Фильтруем айтемы по поисковому запросу
-            const matchingItems = globalItems.filter(item =>
-                item.name.toLowerCase().includes(searchTerm)
-            );
-
-            // Если есть совпадения, добавляем их в модальное окно
-            if (matchingItems.length > 0) {
-                matchingItems.forEach(item => {
-                    const itemElement = createItemElement(item, characterId, searchWrap);
-                    globalItemsContent.appendChild(itemElement);
-                });
-            } else {
-                // Если нет совпадений, добавляем сообщение об отсутствии результатов
-                const noResultsMessage = document.createElement('p');
-                noResultsMessage.textContent = 'Нет результатов поиска';
-                globalItemsContent.appendChild(noResultsMessage);
-            }
-        }
-    }
-
     globalItemsModal.style.display = 'block'; // Показываем модальное окно
-    filterItems('');
+    filterItems(globalItems, characterId, '', globalItemsContent);
     // Обработчик для закрытия модального окна
     const closeBtn = document.getElementsByClassName('close-modal')[1];
     closeBtn.onclick = function() {
@@ -344,18 +310,51 @@ function createItemElement(item, characterId, searchWrap) {
     itemDescriptionElement.textContent = item.description;
     itemElement.appendChild(itemDescriptionElement);
 
-    const selectItemBtn = document.createElement('button');
-    selectItemBtn.classList.add('modal-btn', 'inventory-btn');
-    selectItemBtn.textContent = 'Добавить';
+    // const selectItemBtn = document.createElement('button');
+    // selectItemBtn.classList.add('modal-btn', 'inventory-btn');
+    // selectItemBtn.textContent = 'Добавить';
     // selectItemBtn.onclick = function() {
     //     charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
     //     charactersCharacteristics[characterId].items.push(item);
     //     updateInventory(characterId);
     //     globalItemsModal.style.display = 'none';
     // };
-    itemElement.appendChild(selectItemBtn);
+    // itemElement.appendChild(selectItemBtn);
 
     return itemElement;
+}
+
+// Функция для фильтрации айтемов по поисковому запросу
+function filterItems(items, characterId, searchTerm, container) {
+    // Очищаем содержимое модального окна перед фильтрацией
+    container.innerHTML = '';
+
+    if (searchTerm === '') {
+        // При пустом запросе отображаем все айтемы
+        items.forEach(item => {
+            // Создаем элементы для каждого айтема
+            const itemElement = createItemElement(item, characterId);
+            container.appendChild(itemElement);
+        });
+    } else {
+        // Фильтруем айтемы по поисковому запросу
+        const matchingItems = items.filter(item =>
+            item.name.toLowerCase().includes(searchTerm)
+        );
+
+        // Если есть совпадения, добавляем их в модальное окно
+        if (matchingItems.length > 0) {
+            matchingItems.forEach(item => {
+                const itemElement = createItemElement(item, characterId);
+                container.appendChild(itemElement);
+            });
+        } else {
+            // Если нет совпадений, добавляем сообщение об отсутствии результатов
+            const noResultsMessage = document.createElement('p');
+            noResultsMessage.textContent = 'Нет результатов поиска';
+            container.appendChild(noResultsMessage);
+        }
+    }
 }
 
 // Функция для обновления инвентаря после добавления айтема
