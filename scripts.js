@@ -701,7 +701,7 @@ function saveCharacteristics(characterId, characterData) {
     const wisdom =  characterData ? characterData.wisdom : document.getElementById('wisdomInput').value;
     const charisma = characterData ? characterData.charisma : document.getElementById('charismaInput').value;
     const notes = characterData ? characterData.notes : document.getElementById('notesInput').value;
-    const items = characterData && characterData.items ? characterData.items : [];
+    const items = characterData && characterData.items ? characterData.items : charactersCharacteristics[characterId].items;
 
     // Сохраняем характеристики в объекте charactersCharacteristics для данного персонажа
     charactersCharacteristics[characterId] = {
