@@ -145,6 +145,7 @@ function createInventoryButton(characterBox) {
     const openInventoryButton = document.createElement('button');
     openInventoryButton.classList.add('open-inventory-button');
     openInventoryButton.addEventListener('click', function() {
+        playSound("inventoryAudio", 1);
         openInventory(characterBox.id); // Вызываем функцию открытия инвентаря для соответствующей карточки
     });
 
