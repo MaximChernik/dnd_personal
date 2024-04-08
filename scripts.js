@@ -205,6 +205,7 @@ function openInventory(characterId) {
     // Кнопка для закрытия модального окна
     const closeBtn = document.getElementsByClassName('close-modal')[0];
     closeBtn.onclick = function() {
+        playSound("inventoryAudio", 1);
         inventoryModal.style.display = 'none'; // Закрываем модальное окно при нажатии на кнопку закрытия
     };
 
@@ -219,6 +220,7 @@ function openInventory(characterId) {
     // Закрытие модального окна при клике вне контента
     window.onclick = function(event) {
         if (event.target === inventoryModal) {
+            playSound("inventoryAudio", 1);
             inventoryModal.style.display = 'none';
         }
     };
