@@ -252,7 +252,7 @@ function removeItemFromInventory(characterId, itemId) {
     }
 }
 
-// Функция открытия модального окна с глобальными айтемами для выбора
+// Функция открытия модального окна с глобальными айтемами для выбора v2
 function openGlobalItemsModal(characterId) {
     const globalItemsModal = document.getElementById('globalItemsModal');
     const globalItemsContent = document.getElementById('globalItemsContent');
