@@ -80,7 +80,9 @@ function loadJSON(path) {
         .then(data => {
             globalItems = data.items;
         })
-        .catch(error => console.error('Ошибка загрузки файла globalInventory.json:', error));
+        .catch(error => 
+            console.error('Ошибка загрузки файла globalInventory.json:', 
+            error));
 }
 
 function openModal() {
@@ -654,7 +656,8 @@ function saveCharacterToFile(characterId) {
         wisdom: charactersCharacteristics[characterId]?.wisdom || '',
         charisma: charactersCharacteristics[characterId]?.charisma || '',
         notes: charactersCharacteristics[characterId]?.notes || '',
-        image: characterImage
+        image: characterImage,
+        items: charactersCharacteristics[characterId]?.items || []
     };
     const blob = new Blob([JSON.stringify(characterData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);

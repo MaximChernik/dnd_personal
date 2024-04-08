@@ -206,19 +206,24 @@ body {
 
 .hp-container {
     display: flex;
-    justify-content: left;
-    margin: 20px 20px 0px 20px;
+    margin: auto;
     flex-direction: column;
+    position: relative;
+    top: 5px;
 }
 
 .hp-row {
     display: flex;
+    justify-content: center;
     max-height: 34px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .hp-col {
     position: relative;
-    left: 20px
+    /* left: 20px */
 }
 
 .hp-btn-wrap {
@@ -320,9 +325,10 @@ body {
 }
 
 .characteristic-container {
-    display: flex;
-    justify-content: left;
-    margin: 0px 20px 5px 40px;
+    position: relative;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-52%);
 }
 
 .characteristic-label {
@@ -330,8 +336,8 @@ body {
     color: #712905;
     font-size: 15pt;
     cursor: pointer;
-    top: 10px;
-    left: 12px;
+    top: -17px;
+    left: 10px;
 }
 
 .characteristics-icon {
@@ -678,11 +684,17 @@ body {
 .open-inventory-button {
     width: 40px;
     height: 40px;
-    position: relative;
-    left: -92px;
+    position: absolute;
+    top: calc(100% - 45px);
+    left: 0px;
     background: none;
     border: none;
     cursor: pointer;
+    animation: waveAnimation 2s ease-in-out infinite alternate;
+}
+
+.open-inventory-button:hover {
+    animation: shake 0.5s infinite ease-in-out;
 }
 
 .open-inventory-button img {
