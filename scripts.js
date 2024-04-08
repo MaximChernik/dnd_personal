@@ -107,7 +107,7 @@ function playSound(elementName, volume) {
 
 function matchItemIcon(firstObject, secondObject) {
     // Перебор элементов в массиве items первого объекта
-firstObject.items.forEach(item => {
+    firstObject.items.forEach(item => {
     // Поиск соответствующего элемента во втором объекте по id
     let matchedItem = secondObject.find(i => i.id === item.id);
   
@@ -117,6 +117,17 @@ firstObject.items.forEach(item => {
     }
 });
   
+// Функция для сортировки массива по имени (в алфавитном порядке)
+function sortItemsByName(items) {
+    return items.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+    });
+}
+
 return firstObject;
 }
 
@@ -183,7 +194,7 @@ function openInventory(characterId) {
 
     // Очищаем содержимое инвентаря перед загрузкой новых данных
     inventoryContent.innerHTML = '';
-
+    itemsList.sort((a, b) => a.name.localeCompare(b.name, 'ru', { ignorePunctuation: true }));
     // Отображаем список айтемов в инвентаре
     itemsList.forEach(item => {
         const itemElement = document.createElement('div');
@@ -260,8 +271,8 @@ function openGlobalItemsModal(characterId) {
 
     // Очищаем содержимое модального окна перед загрузкой списка глобальных айтемов
     globalItemsContent.innerHTML = '';
-    globalItems = globalItems || [];
-
+    globalItems = sortItemsByName(globalItems) || [];
+    
     // Создаем элемент для поля поиска
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
