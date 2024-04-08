@@ -309,10 +309,11 @@ function openGlobalItemsModal(characterId) {
     }
 
     globalItemsModal.style.display = 'block'; // Показываем модальное окно
-
+    filterItems('');
     // Обработчик для закрытия модального окна
     const closeBtn = document.getElementsByClassName('close-modal')[1];
     closeBtn.onclick = function() {
+        searchWrap.innerHTML = '';
         globalItemsModal.style.display = 'none'; // Закрываем модальное окно
     };
 }
@@ -320,13 +321,19 @@ function openGlobalItemsModal(characterId) {
 // Функция для создания элемента айтема
 function createItemElement(item, characterId) {
     const itemElement = document.createElement('div');
+    itemElement.onclick = function() {
+        charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
+        charactersCharacteristics[characterId].items.push(item);
+        updateInventory(characterId);
+        globalItemsModal.style.display = 'none';
+    };
 
     const iconElement = document.createElement('img');
     iconElement.src = item.iconBase64;
     iconElement.alt = item.name;
     iconElement.classList.add('item-icon');
     itemElement.appendChild(iconElement);
-
+    
     const itemNameElement = document.createElement('p');
     itemNameElement.textContent = item.name;
     itemElement.appendChild(itemNameElement);
@@ -338,12 +345,12 @@ function createItemElement(item, characterId) {
     const selectItemBtn = document.createElement('button');
     selectItemBtn.classList.add('modal-btn', 'inventory-btn');
     selectItemBtn.textContent = 'Добавить';
-    selectItemBtn.onclick = function() {
-        charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
-        charactersCharacteristics[characterId].items.push(item);
-        updateInventory(characterId);
-        globalItemsModal.style.display = 'none';
-    };
+    // selectItemBtn.onclick = function() {
+    //     charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
+    //     charactersCharacteristics[characterId].items.push(item);
+    //     updateInventory(characterId);
+    //     globalItemsModal.style.display = 'none';
+    // };
     itemElement.appendChild(selectItemBtn);
 
     return itemElement;
