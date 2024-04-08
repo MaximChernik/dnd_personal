@@ -256,6 +256,7 @@ function removeItemFromInventory(characterId, itemId) {
 function openGlobalItemsModal(characterId) {
     const globalItemsModal = document.getElementById('globalItemsModal');
     const globalItemsContent = document.getElementById('globalItemsContent');
+    const searchWrap = document.getElementById('searchWrap');
 
     // Очищаем содержимое модального окна перед загрузкой списка глобальных айтемов
     globalItemsContent.innerHTML = '';
@@ -272,7 +273,7 @@ function openGlobalItemsModal(characterId) {
     });
 
     // Добавляем поле поиска в модальное окно
-    globalItemsContent.appendChild(searchInput);
+    searchWrap.appendChild(searchInput);
 
     // Функция для фильтрации айтемов по поисковому запросу
     function filterItems(searchTerm) {
