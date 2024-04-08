@@ -709,6 +709,7 @@ body {
 
 #inventoryContent div, #globalItemsContent div {
     display: flex;
+    justify-content: space-between;
 }
 
 #inventoryContent div img, #globalItemsContent div img{
