@@ -280,13 +280,13 @@ function openGlobalItemsModal(characterId) {
     searchInput.addEventListener('input', function() {
         // Функция для обновления списка айтемов при изменении текста в поле поиска
         const searchTerm = searchInput.value.trim().toLowerCase();
-        filterItems(globalItems, characterId, searchTerm, globalItemsContent);
+        filterItems(globalItems, characterId, searchTerm, globalItemsContent, searchWrap);
     });
 
     // Добавляем поле поиска в модальное окно
     searchWrap.appendChild(searchInput);
     globalItemsModal.style.display = 'block'; // Показываем модальное окно
-    filterItems(globalItems, characterId, '', globalItemsContent);
+    filterItems(globalItems, characterId, '', globalItemsContent, searchWrap);
     // Обработчик для закрытия модального окна
     const closeBtn = document.getElementsByClassName('close-modal')[1];
     closeBtn.onclick = function() {
@@ -335,7 +335,7 @@ function createItemElement(item, characterId, searchWrap) {
 }
 
 // Функция для фильтрации айтемов по поисковому запросу
-function filterItems(items, characterId, searchTerm, container) {
+function filterItems(items, characterId, searchTerm, container, searchWrap) {
     // Очищаем содержимое модального окна перед фильтрацией
     container.innerHTML = '';
 
@@ -343,7 +343,7 @@ function filterItems(items, characterId, searchTerm, container) {
         // При пустом запросе отображаем все айтемы
         items.forEach(item => {
             // Создаем элементы для каждого айтема
-            const itemElement = createItemElement(item, characterId);
+            const itemElement = createItemElement(item, characterId, searchWrap);
             container.appendChild(itemElement);
         });
     } else {
@@ -355,7 +355,7 @@ function filterItems(items, characterId, searchTerm, container) {
         // Если есть совпадения, добавляем их в модальное окно
         if (matchingItems.length > 0) {
             matchingItems.forEach(item => {
-                const itemElement = createItemElement(item, characterId);
+                const itemElement = createItemElement(item, characterId, searchWrap);
                 container.appendChild(itemElement);
             });
         } else {
