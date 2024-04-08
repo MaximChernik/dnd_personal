@@ -757,6 +757,7 @@ body {
 #inventoryContent, #globalItemsContent {
     max-height: 300px;
     min-height: 300px;
+    margin: 0px 0px 20px 0px;
     overflow: overlay;
 }
 
