@@ -733,6 +733,9 @@ body {
 #inventoryContent div, #globalItemsContent div {
     display: flex;
     justify-content: space-between;
+    background: #5f21024f;
+    border-radius: 5px;
+    margin: 5px 0px 0px 0px;
 }
 
 #inventoryContent div img, #globalItemsContent div img{
@@ -743,11 +746,12 @@ body {
 
 #inventoryContent div p, #globalItemsContent div p{
     min-width: 44px;
-    margin: 12px 5px 0px 5px;
+    margin: 20px 5px 0px 5px;
 }
 
 #inventoryModal .modal-content, #globalItemsModal .modal-content {
     max-height: 400px;
+    padding: 20px 20px 60px 20px;
 }
 
 #inventoryContent, #globalItemsContent {
@@ -760,7 +764,7 @@ body {
     font-size: 10pt;
     padding: 2px;
     height: 20px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 /* Адаптивные стили для мобильных устройств */
