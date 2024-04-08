@@ -285,7 +285,7 @@ function openGlobalItemsModal(characterId) {
             // При пустом запросе отображаем все айтемы
             globalItems.forEach(item => {
                 // Создаем элементы для каждого айтема
-                const itemElement = createItemElement(item, characterId, searchInput);
+                const itemElement = createItemElement(item, characterId, searchWrap);
                 globalItemsContent.appendChild(itemElement);
             });
         } else {
@@ -297,7 +297,7 @@ function openGlobalItemsModal(characterId) {
             // Если есть совпадения, добавляем их в модальное окно
             if (matchingItems.length > 0) {
                 matchingItems.forEach(item => {
-                    const itemElement = createItemElement(item, characterId, searchInput);
+                    const itemElement = createItemElement(item, characterId, searchWrap);
                     globalItemsContent.appendChild(itemElement);
                 });
             } else {
@@ -320,13 +320,13 @@ function openGlobalItemsModal(characterId) {
 }
 
 // Функция для создания элемента айтема
-function createItemElement(item, characterId, searchInput) {
+function createItemElement(item, characterId, searchWrap) {
     const itemElement = document.createElement('div');
     itemElement.onclick = function() {
         charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
         charactersCharacteristics[characterId].items.push(item);
         updateInventory(characterId);
-        searchInput.innerHTML = '';
+        searchWrap.innerHTML = '';
         globalItemsModal.style.display = 'none';
     };
 
