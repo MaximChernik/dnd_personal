@@ -16,6 +16,29 @@ body {
     background-size: cover;
 }
 
+/* Стили для скроллбара */
+/* Ширина полосы прокрутки */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Цвет полосы прокрутки */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+/* Стиль драгера (ползунка) */
+::-webkit-scrollbar-thumb {
+    background: #7d4400;
+    border-radius: 5px;
+}
+
+/* Когда драгер наведен на него */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 .main-container {
     display: inline-flex;
     justify-content: center;
