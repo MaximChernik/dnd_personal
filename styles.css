@@ -631,8 +631,8 @@ body {
     margin-bottom: 10px;
     padding: 8px;
     width: calc(100% - 16px);
-    max-width: 404px;
-    min-width: 404px;
+    max-width: calc(100% - 16px);
+    min-width: calc(100% - 16px);
     min-height: 45px;
     border: 1px solid #7d4400;
     border-radius: 3px;
@@ -731,4 +731,35 @@ body {
     padding: 2px;
     height: 20px;
     margin-top: 10px;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media only screen and (max-width: 500px) {
+    .main-container {
+        display: inline;
+        position: relative;
+        margin: 30px;
+    }
+
+    .characters-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        transform: scale(0.9);
+    }
+
+    .character-box {
+        min-width: 250px;
+        margin: 60px 10px 100px 10px;
+    }
+
+    .modifiers-container {
+        left: 0px;
+        bottom: -506px;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
 }
