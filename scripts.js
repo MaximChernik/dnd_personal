@@ -3,7 +3,6 @@ let characterIdCounter = generateUUID();
 let currentEditId = null;
 let currentEditField = null;
 let globalItems = [];
-
 loadGlobalItems();
 
 document.getElementById('charImageInput').addEventListener('change', function() {
@@ -108,27 +107,16 @@ function playSound(elementName, volume) {
 function matchItemIcon(firstObject, secondObject) {
     // Перебор элементов в массиве items первого объекта
     firstObject.items.forEach(item => {
-    // Поиск соответствующего элемента во втором объекте по id
-    let matchedItem = secondObject.find(i => i.id === item.id);
+        // Поиск соответствующего элемента во втором объекте по id
+        let matchedItem = secondObject.find(i => i.id === item.id);
+    
+        // Если найден элемент во втором объекте, присвоить его значение iconBase64 элементу в первом объекте
+        if (matchedItem) {
+        item.iconBase64 = matchedItem.iconBase64;
+        }
+    });
   
-    // Если найден элемент во втором объекте, присвоить его значение iconBase64 элементу в первом объекте
-    if (matchedItem) {
-      item.iconBase64 = matchedItem.iconBase64;
-    }
-});
-  
-// // Функция для сортировки массива по имени (в алфавитном порядке)
-// function sortItemsByName(items) {
-//     return items.sort((a, b) => {
-//         const nameA = a.name.toLowerCase();
-//         const nameB = b.name.toLowerCase();
-//         if (nameA < nameB) return -1;
-//         if (nameA > nameB) return 1;
-//         return 0;
-//     });
-// }
-
-return firstObject;
+    return firstObject;
 }
 
 function addCharacter() {

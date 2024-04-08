@@ -744,6 +744,10 @@ body {
     padding: 0px 10px;
 }
 
+#inventoryContent div:hover, #globalItemsContent div:hover {
+    background: #5f21028f;
+}
+
 #inventoryContent div img, #globalItemsContent div img{
     width: 40px;
     height: 40px;
