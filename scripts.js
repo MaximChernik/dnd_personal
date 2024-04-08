@@ -265,7 +265,7 @@ function openGlobalItemsModal(characterId) {
     // Создаем элемент для поля поиска
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
-    selectItemBtn.classList.add('modal-input');
+    searchInput.classList.add('modal-input');
     searchInput.placeholder = 'Поиск...';
     searchInput.addEventListener('input', function() {
         // Функция для обновления списка айтемов при изменении текста в поле поиска
