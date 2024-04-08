@@ -736,12 +736,18 @@ body {
     background: #5f21024f;
     border-radius: 5px;
     margin: 5px 0px 0px 0px;
+    padding: 0px 10px;
 }
 
 #inventoryContent div img, #globalItemsContent div img{
     width: 40px;
     height: 40px;
     margin: 10px 0px 10px 0px;
+    background: #f0f8ff96;
+    border-radius: 50%;
+    border-style: double;
+    border-width: 3px;
+    border-color: #7d4400;
 }
 
 #inventoryContent div p, #globalItemsContent div p{
