@@ -105,6 +105,21 @@ function playSound(elementName, volume) {
     audio.play();
 }
 
+function matchItemIcon(firstObject, secondObject) {
+    // Перебор элементов в массиве items первого объекта
+firstObject.items.forEach(item => {
+    // Поиск соответствующего элемента во втором объекте по id
+    let matchedItem = secondObject.items.find(i => i.id === item.id);
+  
+    // Если найден элемент во втором объекте, присвоить его значение iconBase64 элементу в первом объекте
+    if (matchedItem) {
+      item.iconBase64 = matchedItem.iconBase64;
+    }
+  });
+  
+return firstObject;
+}
+
 function addCharacter() {
     const charName = document.getElementById('charNameInput').value;
     let charHp = parseInt(document.getElementById('charHpInput').value);
@@ -657,6 +672,12 @@ function saveCharacterToFile(characterId) {
         image: characterImage,
         items: charactersCharacteristics[characterId]?.items || []
     };
+
+    // Проход по элементам массива items и присвоение значений
+    characterData.items.forEach(item => {
+        item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
+    });
+
     const blob = new Blob([JSON.stringify(characterData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
@@ -703,7 +724,7 @@ function saveCharacteristics(characterId, characterData) {
             ? charactersCharacteristics[characterId].items
             : [];
         ;
-
+    charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
     // Сохраняем характеристики в объекте charactersCharacteristics для данного персонажа
     charactersCharacteristics[characterId] = {
         strength,
