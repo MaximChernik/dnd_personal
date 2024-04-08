@@ -263,7 +263,6 @@ function openGlobalItemsModal(characterId) {
 
     // Создаем элемент для поля поиска
     const searchInput = document.createElement('input');
-    searchInput.classList.add('modal-input');
     searchInput.type = 'text';
     searchInput.placeholder = 'Поиск...';
     searchInput.addEventListener('input', function() {
@@ -277,11 +276,16 @@ function openGlobalItemsModal(characterId) {
 
     // Функция для фильтрации айтемов по поисковому запросу
     function filterItems(searchTerm) {
-        globalItems.forEach(item => {
-            const itemName = item.name.toLowerCase();
-            
-            // Если название айтема содержит часть запроса, добавляем его в список
-            if (itemName.includes(searchTerm)) {
+        // Очищаем содержимое модального окна перед фильтрацией
+        globalItemsContent.innerHTML = '';
+
+        const matchingItems = globalItems.filter(item =>
+            item.name.toLowerCase().includes(searchTerm)
+        );
+
+        // Если есть совпадения, добавляем их в модальное окно
+        if (matchingItems.length > 0) {
+            matchingItems.forEach(item => {
                 const itemElement = document.createElement('div');
 
                 const iconElement = document.createElement('img');
@@ -310,12 +314,14 @@ function openGlobalItemsModal(characterId) {
                 itemElement.appendChild(selectItemBtn);
 
                 globalItemsContent.appendChild(itemElement);
-            }
-        });
+            });
+        } else {
+            // Если нет совпадений, добавляем сообщение об отсутствии результатов
+            const noResultsMessage = document.createElement('p');
+            noResultsMessage.textContent = 'Нет результатов поиска';
+            globalItemsContent.appendChild(noResultsMessage);
+        }
     }
-
-    // Фильтруем айтемы при загрузке модального окна (показываем все)
-    filterItems('');
 
     globalItemsModal.style.display = 'block'; // Показываем модальное окно
 
