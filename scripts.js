@@ -194,7 +194,9 @@ function openInventory(characterId) {
 
     // Очищаем содержимое инвентаря перед загрузкой новых данных
     inventoryContent.innerHTML = '';
-    itemsList.sort((a, b) => a.name.localeCompare(b.name, 'ru', { ignorePunctuation: true }));
+    itemsList.sort(
+        (a, b) => a.name.localeCompare(b.name, 'ru', { ignorePunctuation: true })
+    );
     // Отображаем список айтемов в инвентаре
     itemsList.forEach(item => {
         const itemElement = document.createElement('div');
@@ -271,7 +273,9 @@ function openGlobalItemsModal(characterId) {
 
     // Очищаем содержимое модального окна перед загрузкой списка глобальных айтемов
     globalItemsContent.innerHTML = '';
-    globalItems.sort((a, b) => a.name.localeCompare(b.name, 'en', { ignorePunctuation: true }));
+    globalItems.sort(
+        (a, b) => a.name.localeCompare(b.name, 'ru', { ignorePunctuation: true })
+    );
     // Создаем элемент для поля поиска
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
@@ -372,7 +376,9 @@ function updateInventory(characterId) {
     // Обновляем содержимое инвентаря на странице
     const inventoryContent = document.getElementById('inventoryContent');
     inventoryContent.innerHTML = ''; // Очищаем содержимое
-
+    charactersCharacteristics[characterId].items.sort(
+        (a, b) => a.name.localeCompare(b.name, 'ru', { ignorePunctuation: true })
+    );
     // Отображаем список временных айтемов в инвентаре
     charactersCharacteristics[characterId].items.forEach(item => {
         const itemElement = document.createElement('div');
