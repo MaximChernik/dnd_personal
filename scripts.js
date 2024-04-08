@@ -687,6 +687,7 @@ function saveCharacterToFile(characterId) {
     a.click();
     URL.revokeObjectURL(url);
     playSound("diceAudio", 1);
+    charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
 }
 
 function openCharacteristicsModal(characterId) {
