@@ -619,6 +619,10 @@ body {
     background-repeat: round;
 }
 
+.modal-content h2 {
+    color: #7d4400;
+}
+
 .modal-content label {
     font-size: 16pt;
     color: #5f2102;
@@ -677,8 +681,8 @@ body {
 }
 
 .increment-decrement-container .modal-input {
-    max-width: 360px;
-    min-width: 360px;
+    max-width: calc(100% - 56px);
+    min-width: calc(100% - 56px);
 }
 
 .open-inventory-button {
@@ -714,6 +718,7 @@ body {
 }
 
 #inventoryContent div p, #globalItemsContent div p{
+    min-width: 44px;
     margin: 12px 5px 0px 5px;
 }
 

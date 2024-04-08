@@ -209,6 +209,7 @@ function openInventory(characterId) {
 
     // Кнопка "Добавить предмет"
     const addItemBtn = document.getElementById('addItemBtn');
+    addItemBtn.classList.add('modal-btn');
     addItemBtn.onclick = function() {
         // Открываем модальное окно с глобальными айтемами для выбора
         openGlobalItemsModal(characterId);
@@ -272,7 +273,7 @@ function openGlobalItemsModal(characterId) {
         // Добавляем кнопку "Выбрать предмет" для каждого айтема
         const selectItemBtn = document.createElement('button');
         selectItemBtn.classList.add('modal-btn', 'inventory-btn');
-        selectItemBtn.textContent = 'Выбрать предмет';
+        selectItemBtn.textContent = 'Добавить';
         selectItemBtn.onclick = function() {
             // Добавляем выбранный айтем в временную переменную
             charactersCharacteristics[characterId].items.push(item);
