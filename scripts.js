@@ -109,7 +109,7 @@ function matchItemIcon(firstObject, secondObject) {
     // Перебор элементов в массиве items первого объекта
 firstObject.items.forEach(item => {
     // Поиск соответствующего элемента во втором объекте по id
-    let matchedItem = secondObject.items.find(i => i.id === item.id);
+    let matchedItem = secondObject.find(i => i.id === item.id);
   
     // Если найден элемент во втором объекте, присвоить его значение iconBase64 элементу в первом объекте
     if (matchedItem) {
