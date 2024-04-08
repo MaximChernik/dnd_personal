@@ -252,7 +252,7 @@ function removeItemFromInventory(characterId, itemId) {
     }
 }
 
-// Функция открытия модального окна с глобальными айтемами для выбора v2
+// Функция для отображения модального окна с глобальными айтемами v.2.1
 function openGlobalItemsModal(characterId) {
     const globalItemsModal = document.getElementById('globalItemsModal');
     const globalItemsContent = document.getElementById('globalItemsContent');
@@ -279,47 +279,31 @@ function openGlobalItemsModal(characterId) {
         // Очищаем содержимое модального окна перед фильтрацией
         globalItemsContent.innerHTML = '';
 
-        const matchingItems = globalItems.filter(item =>
-            item.name.toLowerCase().includes(searchTerm)
-        );
-
-        // Если есть совпадения, добавляем их в модальное окно
-        if (matchingItems.length > 0) {
-            matchingItems.forEach(item => {
-                const itemElement = document.createElement('div');
-
-                const iconElement = document.createElement('img');
-                iconElement.src = item.iconBase64;
-                iconElement.alt = item.name;
-                iconElement.classList.add('item-icon');
-                itemElement.appendChild(iconElement);
-
-                const itemNameElement = document.createElement('p');
-                itemNameElement.textContent = item.name;
-                itemElement.appendChild(itemNameElement);
-
-                const itemDescriptionElement = document.createElement('p');
-                itemDescriptionElement.textContent = item.description;
-                itemElement.appendChild(itemDescriptionElement);
-
-                const selectItemBtn = document.createElement('button');
-                selectItemBtn.classList.add('modal-btn', 'inventory-btn');
-                selectItemBtn.textContent = 'Добавить';
-                selectItemBtn.onclick = function() {
-                    charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
-                    charactersCharacteristics[characterId].items.push(item);
-                    updateInventory(characterId);
-                    globalItemsModal.style.display = 'none';
-                };
-                itemElement.appendChild(selectItemBtn);
-
+        if (searchTerm === '') {
+            // При пустом запросе отображаем все айтемы
+            globalItems.forEach(item => {
+                // Создаем элементы для каждого айтема
+                const itemElement = createItemElement(item, characterId);
                 globalItemsContent.appendChild(itemElement);
             });
         } else {
-            // Если нет совпадений, добавляем сообщение об отсутствии результатов
-            const noResultsMessage = document.createElement('p');
-            noResultsMessage.textContent = 'Нет результатов поиска';
-            globalItemsContent.appendChild(noResultsMessage);
+            // Фильтруем айтемы по поисковому запросу
+            const matchingItems = globalItems.filter(item =>
+                item.name.toLowerCase().includes(searchTerm)
+            );
+
+            // Если есть совпадения, добавляем их в модальное окно
+            if (matchingItems.length > 0) {
+                matchingItems.forEach(item => {
+                    const itemElement = createItemElement(item, characterId);
+                    globalItemsContent.appendChild(itemElement);
+                });
+            } else {
+                // Если нет совпадений, добавляем сообщение об отсутствии результатов
+                const noResultsMessage = document.createElement('p');
+                noResultsMessage.textContent = 'Нет результатов поиска';
+                globalItemsContent.appendChild(noResultsMessage);
+            }
         }
     }
 
@@ -330,6 +314,38 @@ function openGlobalItemsModal(characterId) {
     closeBtn.onclick = function() {
         globalItemsModal.style.display = 'none'; // Закрываем модальное окно
     };
+}
+
+// Функция для создания элемента айтема
+function createItemElement(item, characterId) {
+    const itemElement = document.createElement('div');
+
+    const iconElement = document.createElement('img');
+    iconElement.src = item.iconBase64;
+    iconElement.alt = item.name;
+    iconElement.classList.add('item-icon');
+    itemElement.appendChild(iconElement);
+
+    const itemNameElement = document.createElement('p');
+    itemNameElement.textContent = item.name;
+    itemElement.appendChild(itemNameElement);
+
+    const itemDescriptionElement = document.createElement('p');
+    itemDescriptionElement.textContent = item.description;
+    itemElement.appendChild(itemDescriptionElement);
+
+    const selectItemBtn = document.createElement('button');
+    selectItemBtn.classList.add('modal-btn', 'inventory-btn');
+    selectItemBtn.textContent = 'Добавить';
+    selectItemBtn.onclick = function() {
+        charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
+        charactersCharacteristics[characterId].items.push(item);
+        updateInventory(characterId);
+        globalItemsModal.style.display = 'none';
+    };
+    itemElement.appendChild(selectItemBtn);
+
+    return itemElement;
 }
 
 // Функция для обновления инвентаря после добавления айтема
