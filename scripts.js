@@ -272,6 +272,7 @@ function openGlobalItemsModal(characterId) {
         selectItemBtn.textContent = 'Добавить';
         selectItemBtn.onclick = function() {
             // Добавляем выбранный айтем в временную переменную
+            charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
             charactersCharacteristics[characterId].items.push(item);
             // Обновляем инвентарь после добавления айтема
             updateInventory(characterId);
