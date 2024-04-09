@@ -2,6 +2,7 @@ let charactersCharacteristics = {};
 let characterIdCounter = generateUUID();
 let currentEditId = null;
 let currentEditField = null;
+let currentEditCharDataField = null;
 let globalItems = [];
 loadGlobalItems();
 
@@ -124,6 +125,7 @@ function addCharacter() {
     let charHp = parseInt(document.getElementById('charHpInput').value);
     let charMaxHp = parseInt(document.getElementById('charMaxHpInput').value);
     const charShield = parseInt(document.getElementById('charMaxHpInput').value);
+    const sessionId = document.getElementById('sessionIdInput').value;
     
     if (charName && !isNaN(charHp) && !isNaN(charMaxHp) && charHp <= charMaxHp) {
         const charactersContainer = document.getElementById('charactersContainer');
@@ -137,6 +139,27 @@ function addCharacter() {
         characterBorder.classList.add('character-border');
         characterBox.appendChild(characterBorder);
 
+        if (!charactersCharacteristics[characterBox.id]) {
+            charactersCharacteristics[characterBox.id] = 
+            {
+                sessionId: sessionId,
+                characterId : characterBox.id,
+                name: charName,
+                hp: charHp,
+                maxHp: charMaxHp,
+                shield: charShield,
+                strength: '20',
+                dexterity: '20',
+                constitution: '20',
+                wisdom: '20',
+                intelligence: '20',
+                charisma: '20',
+                notes: '',
+                image: '20',
+                items: []
+            }
+        }
+
         characterBorder.appendChild(createNameBlock(charName, characterBox));
         characterBorder.appendChild(createIconBlock(charName));
         characterBorder.appendChild(createHealthBlock(charHp, charMaxHp, characterBox));
@@ -147,7 +170,7 @@ function addCharacter() {
         characterBorder.appendChild(createInventoryButton(characterBox));
         
         updateHPProgress(characterBox);
-        saveCharacteristics(characterBox.id);
+        calculateAndDisplayModifiers(charactersCharacteristics[characterBox.id], characterBox.id);
         playSound("cardAudio", 1);
         closeModal();
     } else {
@@ -312,17 +335,6 @@ function createItemElement(item, characterId, searchWrap) {
     itemDescriptionElement.textContent = item.description;
     itemElement.appendChild(itemDescriptionElement);
 
-    // const selectItemBtn = document.createElement('button');
-    // selectItemBtn.classList.add('modal-btn', 'inventory-btn');
-    // selectItemBtn.textContent = 'Добавить';
-    // selectItemBtn.onclick = function() {
-    //     charactersCharacteristics[characterId].items = charactersCharacteristics[characterId].items || [];
-    //     charactersCharacteristics[characterId].items.push(item);
-    //     updateInventory(characterId);
-    //     globalItemsModal.style.display = 'none';
-    // };
-    // itemElement.appendChild(selectItemBtn);
-
     return itemElement;
 }
 
@@ -442,7 +454,7 @@ function createNameBlock(charName, characterBox) {
     nameLabel.classList.add('name-label');
     nameLabel.textContent = charName;
     nameLabel.onclick = function() {
-        openEditModal(characterBox.id, ".name-label", "Изменить имя персонажа");
+        openEditModal(characterBox.id, ".name-label", "Изменить имя персонажа", "name");
     };
     return nameLabel;
 }
@@ -484,7 +496,7 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
     heartIcon.alt = 'Сердце';
     heartIcon.classList.add('heart-icon');
     heartIcon.onclick = function() {
-        openEditModal(characterBox.id, ".hp-column-value", "Изменить значение ХП");
+        openEditModal(characterBox.id, ".hp-column-value", "Изменить значение ХП", "hp");
     };
     heartIconCol.appendChild(heartIcon);
     hpRow.appendChild(heartIconCol);
@@ -495,14 +507,14 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
     hpValue.classList.add('hp-value');
     hpValue.textContent = 'ХП: ';
     hpValue.onclick = function() {
-        openEditModal(characterBox.id, ".hp-column-value", "Изменить значение ХП");
+        openEditModal(characterBox.id, ".hp-column-value", "Изменить значение ХП", "hp");
     };
     hpValueCol.appendChild(hpValue);
     const hpValueInput = document.createElement('div');
     hpValueInput.classList.add('hp-column-value');
     hpValueInput.innerText = charHp;
     hpValueInput.onclick = function() {
-        openEditModal(characterBox.id, ".hp-column-value", "Изменить значение ХП");
+        openEditModal(characterBox.id, ".hp-column-value", "Изменить значение ХП", "hp");
     };
     hpValueCol.appendChild(hpValueInput);
     hpRow.appendChild(hpValueCol);
@@ -519,6 +531,9 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
             hpValue.textContent = 'ХП: ';
             hpValueInput.textContent = charHp;
             updateHPProgress(characterBox);
+            currentEditId = characterBox.id;
+            currentEditCharDataField = 'hp';
+            updatecharactersCharacteristics(charHp);
             playSound("slashAudio", 0.3);
         }
     };
@@ -538,6 +553,9 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
             hpValue.textContent = 'ХП: ';
             hpValueInput.textContent = charHp;
         }
+        currentEditId = characterBox.id;
+        currentEditCharDataField = 'hp';
+        updatecharactersCharacteristics(charHp);
         playSound("potionAudio", 1);
         updateHPProgress(characterBox);
     };
@@ -555,14 +573,14 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
     maxHpLabel.classList.add('max-hp-label');
     maxHpLabel.textContent = 'Макс ХП: ';
     maxHpLabel.onclick = function() {
-        openEditModal(characterBox.id, ".maxhp-column-value", "Изменить макс. значение ХП");
+        openEditModal(characterBox.id, ".maxhp-column-value", "Изменить макс. значение ХП", "maxHp");
     };
     maxHpLabelCol.appendChild(maxHpLabel);
     const  maxHpValueInput = document.createElement('div');
     maxHpValueInput.classList.add('maxhp-column-value');
     maxHpValueInput.innerText = charMaxHp;
     maxHpValueInput.onclick = function() {
-        openEditModal(characterBox.id, ".maxhp-column-value", "Изменить макс. значение ХП");
+        openEditModal(characterBox.id, ".maxhp-column-value", "Изменить макс. значение ХП", "maxHp");
     };
     maxHpLabelCol.appendChild(maxHpValueInput);
     maxHpRow.appendChild(maxHpLabelCol);
@@ -583,6 +601,9 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
                 charHp = charMaxHp;
                 hpValueInput.textContent = charHp;
             }
+            currentEditId = characterBox.id;
+            currentEditCharDataField = 'maxHp';
+            updatecharactersCharacteristics(charMaxHp);
             updateHPProgress(characterBox);
         }
     };
@@ -595,6 +616,9 @@ function createHealthBlock(charHp, charMaxHp, characterBox) {
         charMaxHp++;
         maxHpLabel.textContent = 'Макс ХП: ';
         maxHpValueInput.textContent = charMaxHp;
+        currentEditId = characterBox.id;
+        currentEditCharDataField = 'maxHp';
+        updatecharactersCharacteristics(charMaxHp);
         updateHPProgress(characterBox);
     };
     maxHpBtnsCol.appendChild(maxHpIncreaseBtn);
@@ -646,7 +670,7 @@ function createShieldBlock(characterBox, charShield) {
     shieldIcon.alt = 'Щит';
     shieldIcon.style.width = '100%';
     shieldIcon.onclick = function() {
-        openEditModal(characterBox.id, ".shield-value", "Изменить значение КБ");
+        openEditModal(characterBox.id, ".shield-value", "Изменить значение КБ", "shield");
     };
     shieldIconContainer.appendChild(shieldIcon);
 
@@ -654,7 +678,7 @@ function createShieldBlock(characterBox, charShield) {
     shieldValue.classList.add('shield-value');
     shieldValue.textContent = charShield;
     shieldValue.onclick = function() {
-        openEditModal(characterBox.id, ".shield-value", "Изменить значение КБ");
+        openEditModal(characterBox.id, ".shield-value", "Изменить значение КБ", "shield");
     };
     shieldIconContainer.appendChild(shieldValue);
 
@@ -669,6 +693,40 @@ function createShieldBlock(characterBox, charShield) {
 
     return shieldIconContainer;
 }
+
+function saveSession() {
+
+}
+
+async function loadCharactersBySession() {
+    const sessionIdInput = document.getElementById('sessionIdInput').value;
+    const charactersContainer = document.getElementById('charactersContainer');
+    charactersContainer.innerHTML = '';
+    charactersCharacteristics = {};
+
+    try {
+        // Загрузка данных из файла sessions.json с сервера
+        const response = await fetch('files/sessions.json');
+        const sessionsData = await response.json();
+
+        // Проверка на наличие данных и фильтрация по sessionId
+        if (sessionsData && sessionsData.sessions && sessionsData.sessions.length > 0) {
+            const charactersInSession = sessionsData.sessions.filter(session => session.sessionId === sessionIdInput);
+            loadCharactersFromData(charactersInSession);
+        } else {
+            console.error('Ошибка загрузки данных сессий');
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки файла sessions.json:', error);
+    }
+}
+
+// Функция загрузки персонажей из JSON и создания их на основе данных
+function loadCharactersFromData(charactersData) {
+    charactersData.forEach(character => {
+      loadCharacterFromFile(character); // Вызываем функцию для создания персонажа из данных
+    });
+  }
 
 function loadCharacterFromFile(characterData) {
     const charNameInput = document.getElementById('charNameInput');
@@ -690,31 +748,21 @@ function loadCharacterFromFile(characterData) {
     }
 
     for (const characteristic in characterData) {
-        if (characteristic !== 'name' && 
-            characteristic !== 'hp' && 
-            characteristic !== 'maxHp' && 
-            characteristic !== 'image' && 
-            characteristic !== 'shield') {
-                charactersCharacteristics[characterId][characteristic] = characterData[characteristic];
-        }
+        charactersCharacteristics[characterId][characteristic] = characterData[characteristic];
     }
 
     addCharacter();
-    saveCharacteristics(characterId, characterData);
 }
 
 function saveCharacterToFile(characterId) {
-    const characterName = document.getElementById(characterId).querySelector('.name-label').textContent;
-    const characterHp = parseInt(document.getElementById(characterId).querySelector('.hp-column-value').textContent);
-    const characterMaxHp = parseInt(document.getElementById(characterId).querySelector('.maxhp-column-value').textContent);
-    const characterShield = parseInt(document.getElementById(characterId).querySelector('.shield-value').textContent);
     const characterImage = document.getElementById(characterId).querySelector('.character-image').base64;
 
     const characterData = {
-        name: characterName,
-        hp: characterHp,
-        maxHp: characterMaxHp,
-        shield: characterShield,
+        characterId: characterId || '',
+        name: charactersCharacteristics[characterId]?.name || '',
+        hp: charactersCharacteristics[characterId]?.hp || '',
+        maxHp: charactersCharacteristics[characterId]?.maxHp || '',
+        shield: charactersCharacteristics[characterId]?.shield || '',
         strength: charactersCharacteristics[characterId]?.strength || '',
         dexterity: charactersCharacteristics[characterId]?.dexterity || '',
         constitution: charactersCharacteristics[characterId]?.constitution || '',
@@ -763,33 +811,25 @@ function openCharacteristicsModal(characterId) {
 }
 
 // Функция для сохранения характеристик и заметок персонажа
-function saveCharacteristics(characterId, characterData) {
+function saveCharacteristics(characterId) {
     // Получаем значения характеристик из модального окна
-    const strength = characterData ? characterData.strength : document.getElementById('strengthInput').value;
-    const dexterity = characterData ? characterData.dexterity : document.getElementById('dexterityInput').value;
-    const constitution = characterData ? characterData.constitution : document.getElementById('constitutionInput').value;
-    const intelligence = characterData ? characterData.intelligence : document.getElementById('intelligenceInput').value;
-    const wisdom =  characterData ? characterData.wisdom : document.getElementById('wisdomInput').value;
-    const charisma = characterData ? characterData.charisma : document.getElementById('charismaInput').value;
-    const notes = characterData ? characterData.notes : document.getElementById('notesInput').value;
-    const items = characterData && characterData.items  
-        ? characterData.items 
-        : charactersCharacteristics[characterId]
-            ? charactersCharacteristics[characterId].items ? charactersCharacteristics[characterId].items: []
-            : [];
-        ;
+    const strength = document.getElementById('strengthInput').value || '';
+    const dexterity = document.getElementById('dexterityInput').value || '';
+    const constitution = document.getElementById('constitutionInput').value || ''; 
+    const intelligence = document.getElementById('intelligenceInput').value || '';
+    const wisdom =  document.getElementById('wisdomInput').value || '';
+    const charisma = document.getElementById('charismaInput').value || '';
+    const notes = document.getElementById('notesInput').value || '';
+
     // Сохраняем характеристики в объекте charactersCharacteristics для данного персонажа
-    charactersCharacteristics[characterId] = {
-        strength,
-        dexterity,
-        constitution,
-        wisdom,
-        intelligence,
-        charisma,
-        notes,
-        items
-    };
-    charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
+    charactersCharacteristics[characterId].strength = strength;
+    charactersCharacteristics[characterId].dexterity = dexterity;
+    charactersCharacteristics[characterId].constitution = constitution;
+    charactersCharacteristics[characterId].intelligence = intelligence;
+    charactersCharacteristics[characterId].wisdom = wisdom;
+    charactersCharacteristics[characterId].charisma = charisma;
+    charactersCharacteristics[characterId].notes = notes;
+
     calculateAndDisplayModifiers(charactersCharacteristics[characterId], characterId);
     playSound("diceAudio", 1);
     closeModal();
@@ -876,6 +916,9 @@ function deleteCharacter(element) {
     const characterBox = element.closest('.character-box');
     characterBox.classList.add('fade-out-animation'); // Добавляем класс анимации
     characterBox.addEventListener('animationend', () => {
+        if (charactersCharacteristics.hasOwnProperty(element.id)) {
+            delete charactersCharacteristics[element.id];
+        }
         characterBox.remove(); // Удаляем карточку после завершения анимации
     });
     playSound("deleteAudio", 1);
@@ -890,9 +933,11 @@ function updateHPProgress(characterBox) {
     hpProgress.style = `width: ${percent}%`;
 }
 
-function openEditModal(id, field, title) {
+function openEditModal(id, field, title, charKey) {
     currentEditId = id;
     currentEditField = field;
+    currentEditCharDataField = charKey;
+
     const modal = document.getElementById('editModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalInput = document.getElementById('modalInput');
@@ -924,6 +969,13 @@ function saveModalData() {
 
     document.getElementById(currentEditId).querySelector(currentEditField).textContent = modalInput;
     updateHPProgress(document.getElementById(currentEditId));
+    updatecharactersCharacteristics(modalInput);
     playSound("diceAudio", 1);
     closeModal();
+}
+
+function updatecharactersCharacteristics(modalInput) {
+    if (charactersCharacteristics[currentEditId]) {
+        charactersCharacteristics[currentEditId][currentEditCharDataField] = modalInput;
+    }
 }

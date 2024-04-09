@@ -1,0 +1,124 @@
+{
+	"sessions": [
+		{
+			"sessionId": "123",
+			"characterId": "character7271f657-46ca-488e-a6c5-d1b2947f57d4"
+			"name": "Character First",
+			"hp": 24,
+			"maxHp": 24,
+			"shield": 24,
+			"strength": "20",
+			"dexterity": "20",
+			"constitution": "20",
+			"wisdom": "20",
+			"intelligence": "20",
+			"charisma": "20",
+			"notes": "",
+			"image": ",
+			"items": [
+				{
+				  "id": "1",
+				  "name": "Меч",
+				  "description": "Очень острый меч",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "3",
+				  "name": "Щит",
+				  "description": "Простой щит +1 КБ",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				}
+			]
+		},
+		{
+			"sessionId": "123",
+			"characterId": "character7271f657-46ca-488e-a6c5-d1b2947f57f6"
+			"name": "Character Two",
+			"hp": 11,
+			"maxHp": 11,
+			"shield": 11,
+			"strength": "11",
+			"dexterity": "11",
+			"constitution": "11",
+			"wisdom": "11",
+			"intelligence": "11",
+			"charisma": "11",
+			"notes": "",
+			"image": ",
+			"items": [
+				{
+				  "id": "1",
+				  "name": "Меч",
+				  "description": "Очень острый меч",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "3",
+				  "name": "Щит",
+				  "description": "Простой щит +1 КБ",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				},
+				{
+				  "id": "2",
+				  "name": "Зелье лечения",
+				  "description": "Маленький бутыль",
+				  "iconBase64": ""
+				}
+			]
+		}
+	]
+}

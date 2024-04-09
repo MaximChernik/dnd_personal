@@ -8,7 +8,13 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div calss="session-wrap">
+        <input class="modal-input session-input" type="text" id="sessionIdInput" placeholder="Введите номер сессии">
+        <button class="modal-btn" onclick="loadCharactersBySession()">Войти в сессию</button>
+        <button class="modal-btn" onclick="saveSession()">Сохранить сессию</button>
+    </div>
     <div class="main-container" id="mainContainer">
+
         <div class="characters-container" id="charactersContainer">
             <!-- Карточки персонажей будут добавляться сюда -->
         </div>
@@ -49,7 +55,7 @@
         <audio id="closeInventoryAudio" style="display: none">
             <source src="audio/closeInventory.mp3" type="audio/mpeg">
         </audio>
-
+        
         <div class="modal" id="modal">
             <div class="modal-content">
                 <label for="charNameInput">Имя персонажа:</label>
