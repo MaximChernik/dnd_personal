@@ -42,7 +42,7 @@ async function fetchSessions() {
     },
   });
   const data = await response.json();
-  const content = atob(data.content);
+  const content = decodeURIComponent(escape(window.atob(data.content)));;
   return JSON.parse(content);
 }
 
