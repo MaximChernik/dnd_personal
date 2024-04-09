@@ -37,7 +37,7 @@ async function updateSessions(sessionId, updatedCards) {
 async function fetchSessions() {
 
 
-  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+  const response = await fetch(`https://api.github.com/${username}/${repo}/tree/main/${filePath}`, {
     headers: {
       Authorization: `token ${token}`,
     },
