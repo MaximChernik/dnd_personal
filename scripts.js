@@ -50,16 +50,30 @@ async function fetchSessions() {
 }
 
 async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
-    const updatedCharacters = charactersCharacteristics;
-    const updatedSessions = sessionsData.content.sessions.map(session => {
-      if (session.sessionId === sessionId && updatedCharacters[session.characterId]) {
-        // Обновляем только те объекты, у которых sessionId и characterId совпадают
-        Object.assign(session, updatedCards[session.characterId]);
+    let updatedCharacterData = Object.values(charactersCharacteristics);
+
+
+    if (!Array.isArray(sessionData) || !Array.isArray(updatedCharacterData)) {
+        throw new Error('Invalid input data. Both inputs must be arrays.');
       }
-      return session;
-    });
-  
-    sessionsData.sessions = updatedSessions;
+    
+      // Преобразуем updatedCharacterData в объект для удобства доступа по characterId
+      const updatedCharacterMap = updatedCharacterData.reduce((acc, character) => {
+        acc[character.characterId] = character && character.sessionId === sessionId;
+        return acc;
+      }, {});
+    
+      // Обновляем sessionData на основе updatedCharacterData
+      const updatedSessions = sessionData.map(session => {
+        // Проверяем, есть ли совпадение characterId в session и updatedCharacterMap
+        if (updatedCharacterMap[session.characterId]) {
+          // Обновляем поля characterId в session на основе данных из updatedCharacterMap
+          Object.assign(session, updatedCharacterMap[session.characterId]);
+        }
+        return session;
+      });
+    
+      return updatedSessions;
     const updatedContent = JSON.stringify(sessionsData, null, 2);
   
     const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
