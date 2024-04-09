@@ -64,7 +64,7 @@ async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
   const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
     method: 'PUT',
     headers: {
-      Authorization: `token ${token}`,
+      Authorization: `token ${document.getElementById('tokenInput').value}`,
     },
     body: JSON.stringify({
       message: 'Update sessions.json',
