@@ -35,7 +35,7 @@ async function updateSessions(sessionId, updatedCards) {
 
 // Получение текущего содержимого файла сессий
 async function fetchSessions() {
-  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/tree/main/${filePath}`, {
     headers: {
       Authorization: `token ${token}`,
     },
