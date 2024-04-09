@@ -57,7 +57,9 @@ async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
     let updatedCharacterData = Object.values(charactersCharacteristics);
         // Проход по элементам массива items и присвоение значений
     updatedCharacterData.forEach(item => {
-        item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
+        item.items.forEach(item => {
+            item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
+        });
     });
 
     if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
