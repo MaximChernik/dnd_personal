@@ -11,7 +11,7 @@ loadGlobalItems();
 // Ваши данные для доступа к GitHub API
 const username = 'MaximChernik';
 const repo = 'dnd_personal';
-const token = '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';
+const token = document.getElementById('tokenInput').value;
 
 // Путь к файлу сессий в репозитории
 const filePath = 'files/sessions.json';
@@ -35,6 +35,8 @@ async function updateSessions(sessionId, updatedCards) {
 
 // Получение текущего содержимого файла сессий
 async function fetchSessions() {
+
+
   const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
     headers: {
       Authorization: `token ${token}`,
@@ -91,7 +93,6 @@ const updatedCards = [
 
 
 
-//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
 document.getElementById('charImageInput').addEventListener('change', function() {
     // Здесь можно добавить логику обработки выбранного файла, если нужно
     console.log('Файл выбран:', this.files[0]);
@@ -1064,9 +1065,4 @@ function updatecharactersCharacteristics(modalInput) {
     if (charactersCharacteristics[currentEditId]) {
         charactersCharacteristics[currentEditId][currentEditCharDataField] = modalInput;
     }
-}
-
-function updateSession() {
-    // Загружаем текущее содержимое sessions.json
-const sessionsData = JSON.parse(fs.readFileSync('sessions.json'));
 }
