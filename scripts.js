@@ -55,7 +55,10 @@ function compareObjects(obj1, obj2) {
 
 async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
     let updatedCharacterData = Object.values(charactersCharacteristics);
-
+        // Проход по элементам массива items и присвоение значений
+    updatedCharacterData.forEach(item => {
+        item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
+    });
 
     if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
         throw new Error('Invalid input data. Both inputs must be arrays.');
