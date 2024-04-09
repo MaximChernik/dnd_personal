@@ -46,34 +46,32 @@ async function fetchSessions() {
   return JSON.parse(content);
 }
 
-// Обновление данных карточек в файле сессий
 async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
-  const updatedSessions = sessionsData.sessions.map(session => {
-    if (session.sessionId === sessionId) {
-      const updatedCharacter = updatedCards.find(card => card.characterId === session.characterId);
-      if (updatedCharacter) {
-        Object.assign(session, updatedCharacter);
+    const updatedCharacters = charactersCharacteristics;
+    const updatedSessions = sessionsData.sessions.map(session => {
+      if (session.sessionId === sessionId && updatedCharacters[session.characterId]) {
+        // Обновляем только те объекты, у которых sessionId и characterId совпадают
+        Object.assign(session, updatedCards[session.characterId]);
       }
-    }
-    return session;
-  });
-
-  sessionsData.sessions = updatedSessions;
-  const updatedContent = JSON.stringify(sessionsData, null, 2);
-
-  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `token ${document.getElementById('tokenInput').value}`,
-    },
-    body: JSON.stringify({
-      message: 'Update sessions.json',
-      content: Buffer.from(updatedContent).toString('base64'),
-      sha: sessionsData.sha,
-    }),
-  });
-
-  return await response.json();
+      return session;
+    });
+  
+    sessionsData.sessions = updatedSessions;
+    const updatedContent = JSON.stringify(sessionsData, null, 2);
+  
+    const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${document.getElementById('tokenInput').value}`,
+      },
+      body: JSON.stringify({
+        message: 'Update sessions.json',
+        content: Buffer.from(updatedContent).toString('base64'),
+        sha: sessionsData.sha,
+      }),
+    });
+  
+    return await response.json();
 }
 
 // Пример использования функции для обновления данных карточек
