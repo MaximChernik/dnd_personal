@@ -698,6 +698,10 @@ function saveSession() {
 
 }
 
+function handleloadCharactersBySession() {
+    loadCharactersBySession();
+}
+
 async function loadCharactersBySession() {
     const sessionIdInput = document.getElementById('sessionIdInput').value;
     const charactersContainer = document.getElementById('charactersContainer');
