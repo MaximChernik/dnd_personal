@@ -43,12 +43,15 @@ async function fetchSessions() {
   });
   const data = await response.json();
   const content = decodeURIComponent(escape(window.atob(data.content)));;
-  return JSON.parse(content);
+  return ({
+            content: JSON.parse(content),
+            sha: data.sha
+        });
 }
 
 async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
     const updatedCharacters = charactersCharacteristics;
-    const updatedSessions = sessionsData.sessions.map(session => {
+    const updatedSessions = sessionsData.content.sessions.map(session => {
       if (session.sessionId === sessionId && updatedCharacters[session.characterId]) {
         // Обновляем только те объекты, у которых sessionId и characterId совпадают
         Object.assign(session, updatedCards[session.characterId]);
