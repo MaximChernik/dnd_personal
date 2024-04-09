@@ -49,31 +49,34 @@ async function fetchSessions() {
         });
 }
 
+function compareObjects(obj1, obj2) {
+    return obj1.sessionId === obj2.sessionId && obj1.characterId === obj2.characterId;
+  }
+
 async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
     let updatedCharacterData = Object.values(charactersCharacteristics);
 
 
-    if (!Array.isArray(sessionData) || !Array.isArray(updatedCharacterData)) {
+    if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
         throw new Error('Invalid input data. Both inputs must be arrays.');
-      }
+    }
     
-      // Преобразуем updatedCharacterData в объект для удобства доступа по characterId
-      const updatedCharacterMap = updatedCharacterData.reduce((acc, character) => {
-        acc[character.characterId] = character && character.sessionId === sessionId;
-        return acc;
-      }, {});
-    
-      // Обновляем sessionData на основе updatedCharacterData
-      const updatedSessions = sessionData.map(session => {
-        // Проверяем, есть ли совпадение characterId в session и updatedCharacterMap
-        if (updatedCharacterMap[session.characterId]) {
-          // Обновляем поля characterId в session на основе данных из updatedCharacterMap
-          Object.assign(session, updatedCharacterMap[session.characterId]);
+    // Проходим по элементам первого массива
+    for (let i = 0; i < sessionsData.content.sessions.length; i++) {
+        const currentItem1 = sessionsData.content.sessions[i];
+        // Проходим по элементам второго массива
+        for (let j = 0; j < updatedCharacterData.length; j++) {
+            const currentItem2 = updatedCharacterData[j];
+            // Если sessionId и characterId совпадают
+            if (compareObjects(currentItem1, currentItem2)) {
+                // Обновляем поля элемента array1 согласно элементу array2
+                sessionsData.content.sessions[i] = { ...sessionsData.content.sessions[i], ...updatedCharacterData[j] };
+                break; // Выходим из цикла второго массива, так как нашли соответствие
+            }
         }
-        return session;
-      });
+    }
 
-    const updatedContent = JSON.stringify(updatedSessions, null, 2);
+    const updatedContent = JSON.stringify(sessionsData.content, null, 2);
   
     const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
       method: 'PUT',
