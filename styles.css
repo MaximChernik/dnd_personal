@@ -776,6 +776,7 @@ body {
     font-size: 10pt;
     font-style: italic;
     margin: 22px 10px 0px auto;
+    text-align: right;
 }
 
 #inventoryModal .modal-content, #globalItemsModal .modal-content {
