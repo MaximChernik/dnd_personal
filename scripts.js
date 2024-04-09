@@ -5,6 +5,7 @@ let currentEditField = null;
 let currentEditCharDataField = null;
 let globalItems = [];
 loadGlobalItems();
+const fs = require('fs');
 
 document.getElementById('charImageInput').addEventListener('change', function() {
     // Здесь можно добавить логику обработки выбранного файла, если нужно
@@ -982,4 +983,9 @@ function updatecharactersCharacteristics(modalInput) {
     if (charactersCharacteristics[currentEditId]) {
         charactersCharacteristics[currentEditId][currentEditCharDataField] = modalInput;
     }
+}
+
+function updateSession() {
+    // Загружаем текущее содержимое sessions.json
+const sessionsData = JSON.parse(fs.readFileSync('sessions.json'));
 }
