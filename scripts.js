@@ -66,7 +66,7 @@ async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
       },
       body: JSON.stringify({
         message: 'Update sessions.json',
-        content: Buffer.from(updatedContent).toString('base64'),
+        content: btoa(unescape(encodeURIComponent(updatedContent))),
         sha: sessionsData.sha,
       }),
     });
