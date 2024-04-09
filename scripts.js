@@ -11,7 +11,7 @@ loadGlobalItems();
 // Ваши данные для доступа к GitHub API
 const username = 'MaximChernik';
 const repo = 'dnd_personal';
-const token = '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';
+const token = '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';
 
 // Путь к файлу сессий в репозитории
 const filePath = 'files/sessions.json';
