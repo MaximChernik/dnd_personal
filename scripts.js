@@ -718,8 +718,8 @@ function saveCharacterToFile(characterId) {
         strength: charactersCharacteristics[characterId]?.strength || '',
         dexterity: charactersCharacteristics[characterId]?.dexterity || '',
         constitution: charactersCharacteristics[characterId]?.constitution || '',
-        intelligence: charactersCharacteristics[characterId]?.intelligence || '',
         wisdom: charactersCharacteristics[characterId]?.wisdom || '',
+        intelligence: charactersCharacteristics[characterId]?.intelligence || '',
         charisma: charactersCharacteristics[characterId]?.charisma || '',
         notes: charactersCharacteristics[characterId]?.notes || '',
         image: characterImage,
@@ -783,8 +783,8 @@ function saveCharacteristics(characterId, characterData) {
         strength,
         dexterity,
         constitution,
-        intelligence,
         wisdom,
+        intelligence,
         charisma,
         notes,
         items
@@ -818,13 +818,13 @@ function calculateModifiers(characteristics) {
         name: "Выносливость",
         value: Math.floor((characteristics.constitution - 10) / 2)
     };
-    const intelligenceModifier = { 
-        name: "Интеллект",
-        value: Math.floor((characteristics.intelligence - 10) / 2)
-    };
     const wisdomModifier = { 
         name: "Мудрость",
         value: Math.floor((characteristics.wisdom - 10) / 2)
+    };
+    const intelligenceModifier = { 
+        name: "Интеллект",
+        value: Math.floor((characteristics.intelligence - 10) / 2)
     };
     const charismaModifier = { 
         name: "Харизма",
@@ -835,8 +835,8 @@ function calculateModifiers(characteristics) {
         strengthModifier, 
         dexterityModifier, 
         constitutionModifier, 
-        intelligenceModifier, 
         wisdomModifier,
+        intelligenceModifier, 
         charismaModifier
     };
 }
