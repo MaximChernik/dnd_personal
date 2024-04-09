@@ -11,7 +11,6 @@ loadGlobalItems();
 // Ваши данные для доступа к GitHub API
 const username = 'MaximChernik';
 const repo = 'dnd_personal';
-const token = document.getElementById('tokenInput').value;
 
 // Путь к файлу сессий в репозитории
 const filePath = 'files/sessions.json';
@@ -39,7 +38,7 @@ async function fetchSessions() {
 
   const response = await fetch(`https://api.github.com/${username}/${repo}/tree/main/${filePath}`, {
     headers: {
-      Authorization: `token ${token}`,
+      Authorization: `token ${document.getElementById('tokenInput').value}`,
     },
   });
   const data = await response.json();
