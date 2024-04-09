@@ -72,9 +72,8 @@ async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
         }
         return session;
       });
-    
-      return updatedSessions;
-    const updatedContent = JSON.stringify(sessionsData, null, 2);
+
+    const updatedContent = JSON.stringify(updatedSessions, null, 2);
   
     const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
       method: 'PUT',
