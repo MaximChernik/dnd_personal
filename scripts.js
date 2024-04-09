@@ -4,9 +4,94 @@ let currentEditId = null;
 let currentEditField = null;
 let currentEditCharDataField = null;
 let globalItems = [];
+//let currentSession = {};
 loadGlobalItems();
-const fs = require('fs');
 
+
+// Ваши данные для доступа к GitHub API
+const username = 'MaximChernik';
+const repo = 'dnd_personal';
+const token = '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';
+
+// Путь к файлу сессий в репозитории
+const filePath = 'files/sessions.json';
+
+// Функция для обновления карточек в файле сессий
+async function updateSessions(sessionId, updatedCards) {
+  try {
+    // Получение текущего содержимого файла сессий
+    const sessionsData = await fetchSessions();
+    
+    // Обновление данных карточек
+    const updatedResult = await updateSessionsFile(sessionId, updatedCards, sessionsData);
+
+    console.log('Данные успешно обновлены в файле сессий:', updatedResult);
+    return updatedResult;
+  } catch (error) {
+    console.error('Ошибка при обновлении данных в файле сессий:', error);
+    return null;
+  }
+}
+
+// Получение текущего содержимого файла сессий
+async function fetchSessions() {
+  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+    headers: {
+      Authorization: `token ${token}`,
+    },
+  });
+  const data = await response.json();
+  const content = Buffer.from(data.content, 'base64').toString();
+  return JSON.parse(content);
+}
+
+// Обновление данных карточек в файле сессий
+async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
+  const updatedSessions = sessionsData.sessions.map(session => {
+    if (session.sessionId === sessionId) {
+      const updatedCharacter = updatedCards.find(card => card.characterId === session.characterId);
+      if (updatedCharacter) {
+        Object.assign(session, updatedCharacter);
+      }
+    }
+    return session;
+  });
+
+  sessionsData.sessions = updatedSessions;
+  const updatedContent = JSON.stringify(sessionsData, null, 2);
+
+  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `token ${token}`,
+    },
+    body: JSON.stringify({
+      message: 'Update sessions.json',
+      content: Buffer.from(updatedContent).toString('base64'),
+      sha: sessionsData.sha,
+    }),
+  });
+
+  return await response.json();
+}
+
+// Пример использования функции для обновления данных карточек
+const sessionId = '123';
+const updatedCards = [
+  {
+    characterId: 'character1',
+    name: 'New Character Name',
+    hp: 30,
+    maxHp: 30,
+    // Другие изменения...
+  },
+  // Другие измененные карточки...
+];
+
+
+
+
+//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
 document.getElementById('charImageInput').addEventListener('change', function() {
     // Здесь можно добавить логику обработки выбранного файла, если нужно
     console.log('Файл выбран:', this.files[0]);
@@ -693,10 +778,6 @@ function createShieldBlock(characterBox, charShield) {
     shieldIconContainer.appendChild(shieldInput);
 
     return shieldIconContainer;
-}
-
-function saveSession() {
-
 }
 
 function handleloadCharactersBySession() {
