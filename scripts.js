@@ -42,7 +42,7 @@ async function fetchSessions() {
     },
   });
   const data = await response.json();
-  const content = Buffer.from(data.content, 'base64').toString();
+  const content = atob(data.content);
   return JSON.parse(content);
 }
 
