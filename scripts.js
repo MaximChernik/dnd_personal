@@ -754,7 +754,7 @@ function loadCharacterFromFile(characterData) {
     for (const characteristic in characterData) {
         charactersCharacteristics[characterId][characteristic] = characterData[characteristic];
     }
-
+    charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
     addCharacter();
 }
 
