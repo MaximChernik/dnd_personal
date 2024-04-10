@@ -17,19 +17,83 @@ const filePath = 'files/sessions.json';
 
 // Функция для обновления карточек в файле сессий
 async function updateSessions(sessionId, updatedCards) {
-  try {
-    // Получение текущего содержимого файла сессий
-    const sessionsData = await fetchSessions();
-    
-    // Обновление данных карточек
-    const updatedResult = await updateSessionsFile(sessionId, updatedCards, sessionsData);
+// Новое содержимое для записи в файл
+var newContent = JSON.stringify({
+    "sessions": [
+        {
+            "sessionId": "123",
+            "characterId": "character7271f657-46ca-488e-a6c5-d1b2947f57d4",
+            "name": "Character First Updated",
+            "hp": 30,
+            "maxHp": 30,
+            "shield": 30,
+            "strength": "25",
+            "dexterity": "25",
+            "constitution": "25",
+            "wisdom": "25",
+            "intelligence": "25",
+            "charisma": "25",
+            "notes": "Updated notes",
+            "image": "",
+            "items": [
+                {
+                    "id": "1",
+                    "name": "Меч",
+                    "description": "Очень острый меч",
+                    "iconBase64": ""
+                },
+                {
+                    "id": "3",
+                    "name": "Щит",
+                    "description": "Простой щит +1 КБ",
+                    "iconBase64": ""
+                },
+                {
+                    "id": "2",
+                    "name": "Зелье лечения",
+                    "description": "Маленький бутыль",
+                    "iconBase64": ""
+                }
+            ]
+        }
+    ]
+});
 
-    console.log('Данные успешно обновлены в файле сессий:', updatedResult);
-    return updatedResult;
-  } catch (error) {
-    console.error('Ошибка при обновлении данных в файле сессий:', error);
-    return null;
-  }
+// AJAX запрос для отправки данных на PHP скрипт
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "updateFile.php", true);
+xhr.setRequestHeader("Content-Type", "application/json");
+
+xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        if (response.success) {
+            console.log('Файл успешно обновлен.');
+        } else {
+            console.error('Произошла ошибка при обновлении файла:', response.error);
+        }
+    }
+};
+
+xhr.send(JSON.stringify({ newContent: newContent }));
+
+
+
+
+
+//   try {
+//     // Получение текущего содержимого файла сессий
+//     const sessionsData = await fetchSessions();
+    
+//     // Обновление данных карточек
+//     const updatedResult = await updateSessionsFile(sessionId, updatedCards, sessionsData);
+
+//     console.log('Данные успешно обновлены в файле сессий:', updatedResult);
+//     return updatedResult;
+//   } catch (error) {
+//     console.error('Ошибка при обновлении данных в файле сессий:', error);
+//     return null;
+//   }
 }
 
 // Получение текущего содержимого файла сессий
