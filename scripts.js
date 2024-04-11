@@ -17,47 +17,38 @@ const filePath = 'files/sessions.json';
 
 // Функция для обновления карточек в файле сессий
 async function updateSessions(sessionId, updatedCards) {
+// Загрузка данных из файла sessions.json с сервера
+const response = await fetch('files/sessions.json');
+const sessionsData = await response.json();
 // Новое содержимое для записи в файл
-var newContent = JSON.stringify({
-    "sessions": [
-        {
-            "sessionId": "123",
-            "characterId": "character7271f657-46ca-488e-a6c5-d1b2947f57d4",
-            "name": "Character First Updated",
-            "hp": 30,
-            "maxHp": 30,
-            "shield": 30,
-            "strength": "25",
-            "dexterity": "25",
-            "constitution": "25",
-            "wisdom": "25",
-            "intelligence": "25",
-            "charisma": "25",
-            "notes": "Updated notes",
-            "image": "",
-            "items": [
-                {
-                    "id": "1",
-                    "name": "Меч",
-                    "description": "Очень острый меч",
-                    "iconBase64": ""
-                },
-                {
-                    "id": "3",
-                    "name": "Щит",
-                    "description": "Простой щит +1 КБ",
-                    "iconBase64": ""
-                },
-                {
-                    "id": "2",
-                    "name": "Зелье лечения",
-                    "description": "Маленький бутыль",
-                    "iconBase64": ""
-                }
-            ]
-        }
-    ]
+let updatedCharacterData = Object.values(charactersCharacteristics);
+// Проход по элементам массива items и присвоение значений
+updatedCharacterData.forEach(item => {
+item.items.forEach(item => {
+    item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
 });
+});
+
+if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
+throw new Error('Invalid input data. Both inputs must be arrays.');
+}
+
+// Проходим по элементам первого массива
+for (let i = 0; i < sessionsData.content.sessions.length; i++) {
+const currentItem1 = sessionsData.content.sessions[i];
+// Проходим по элементам второго массива
+for (let j = 0; j < updatedCharacterData.length; j++) {
+    const currentItem2 = updatedCharacterData[j];
+    // Если sessionId и characterId совпадают
+    if (compareObjects(currentItem1, currentItem2)) {
+        // Обновляем поля элемента array1 согласно элементу array2
+        sessionsData.content.sessions[i] = { ...sessionsData.content.sessions[i], ...updatedCharacterData[j] };
+        break; // Выходим из цикла второго массива, так как нашли соответствие
+    }
+}
+}
+
+const updatedContent = JSON.stringify(sessionsData.content, null, 2);
 
 // AJAX запрос для отправки данных на PHP скрипт
 var xhr = new XMLHttpRequest();
@@ -75,7 +66,7 @@ xhr.onreadystatechange = function () {
     }
 };
 
-xhr.send(JSON.stringify({ newContent: newContent }));
+xhr.send(JSON.stringify({ newContent: updatedContent }));
 
 
 
@@ -96,86 +87,71 @@ xhr.send(JSON.stringify({ newContent: newContent }));
 //   }
 }
 
-// Получение текущего содержимого файла сессий
-async function fetchSessions() {
+// // Получение текущего содержимого файла сессий
+// async function fetchSessions() {
 
 
-  const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
-    headers: {
-      Authorization: `token ${document.getElementById('tokenInput').value}`,
-    },
-  });
-  const data = await response.json();
-  const content = decodeURIComponent(escape(window.atob(data.content)));;
-  return ({
-            content: JSON.parse(content),
-            sha: data.sha
-        });
-}
+//   const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+//     headers: {
+//       Authorization: `token ${document.getElementById('tokenInput').value}`,
+//     },
+//   });
+//   const data = await response.json();
+//   const content = decodeURIComponent(escape(window.atob(data.content)));;
+//   return ({
+//             content: JSON.parse(content),
+//             sha: data.sha
+//         });
+// }
 
 function compareObjects(obj1, obj2) {
     return obj1.sessionId === obj2.sessionId && obj1.characterId === obj2.characterId;
   }
 
-async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
-    let updatedCharacterData = Object.values(charactersCharacteristics);
-        // Проход по элементам массива items и присвоение значений
-    updatedCharacterData.forEach(item => {
-        item.items.forEach(item => {
-            item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
-        });
-    });
+// async function updateSessionsFile(sessionId, updatedCards, sessionsData) {
+//     let updatedCharacterData = Object.values(charactersCharacteristics);
+//         // Проход по элементам массива items и присвоение значений
+//     updatedCharacterData.forEach(item => {
+//         item.items.forEach(item => {
+//             item.iconBase64 = ""; // Проставляем пустое значение для iconBase64
+//         });
+//     });
 
-    if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
-        throw new Error('Invalid input data. Both inputs must be arrays.');
-    }
+//     if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
+//         throw new Error('Invalid input data. Both inputs must be arrays.');
+//     }
     
-    // Проходим по элементам первого массива
-    for (let i = 0; i < sessionsData.content.sessions.length; i++) {
-        const currentItem1 = sessionsData.content.sessions[i];
-        // Проходим по элементам второго массива
-        for (let j = 0; j < updatedCharacterData.length; j++) {
-            const currentItem2 = updatedCharacterData[j];
-            // Если sessionId и characterId совпадают
-            if (compareObjects(currentItem1, currentItem2)) {
-                // Обновляем поля элемента array1 согласно элементу array2
-                sessionsData.content.sessions[i] = { ...sessionsData.content.sessions[i], ...updatedCharacterData[j] };
-                break; // Выходим из цикла второго массива, так как нашли соответствие
-            }
-        }
-    }
+//     // Проходим по элементам первого массива
+//     for (let i = 0; i < sessionsData.content.sessions.length; i++) {
+//         const currentItem1 = sessionsData.content.sessions[i];
+//         // Проходим по элементам второго массива
+//         for (let j = 0; j < updatedCharacterData.length; j++) {
+//             const currentItem2 = updatedCharacterData[j];
+//             // Если sessionId и characterId совпадают
+//             if (compareObjects(currentItem1, currentItem2)) {
+//                 // Обновляем поля элемента array1 согласно элементу array2
+//                 sessionsData.content.sessions[i] = { ...sessionsData.content.sessions[i], ...updatedCharacterData[j] };
+//                 break; // Выходим из цикла второго массива, так как нашли соответствие
+//             }
+//         }
+//     }
 
-    const updatedContent = JSON.stringify(sessionsData.content, null, 2);
+//     const updatedContent = JSON.stringify(sessionsData.content, null, 2);
   
-    const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${document.getElementById('tokenInput').value}`,
-      },
-      body: JSON.stringify({
-        message: 'Update sessions.json',
-        content: btoa(unescape(encodeURIComponent(updatedContent))),
-        sha: sessionsData.sha,
-      }),
-    });
+//     const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${filePath}`, {
+//       method: 'PUT',
+//       headers: {
+//         Authorization: `token ${document.getElementById('tokenInput').value}`,
+//       },
+//       body: JSON.stringify({
+//         message: 'Update sessions.json',
+//         content: btoa(unescape(encodeURIComponent(updatedContent))),
+//         sha: sessionsData.sha,
+//       }),
+//     });
   
-    return await response.json();
-}
-
-// Пример использования функции для обновления данных карточек
-const sessionId = '123';
-const updatedCards = [
-  {
-    characterId: 'character1',
-    name: 'New Character Name',
-    hp: 30,
-    maxHp: 30,
-    // Другие изменения...
-  },
-  // Другие измененные карточки...
-];
-
-
+//     return await response.json();
+// }
 
 
 document.getElementById('charImageInput').addEventListener('change', function() {
