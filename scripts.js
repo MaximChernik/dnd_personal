@@ -29,26 +29,26 @@ item.items.forEach(item => {
 });
 });
 
-if (!Array.isArray(sessionsData.content.sessions) || !Array.isArray(updatedCharacterData)) {
+if (!Array.isArray(sessionsData) || !Array.isArray(updatedCharacterData)) {
 throw new Error('Invalid input data. Both inputs must be arrays.');
 }
 
 // Проходим по элементам первого массива
-for (let i = 0; i < sessionsData.content.sessions.length; i++) {
-const currentItem1 = sessionsData.content.sessions[i];
+for (let i = 0; i < sessionsData.length; i++) {
+const currentItem1 = sessionsData[i];
 // Проходим по элементам второго массива
 for (let j = 0; j < updatedCharacterData.length; j++) {
     const currentItem2 = updatedCharacterData[j];
     // Если sessionId и characterId совпадают
     if (compareObjects(currentItem1, currentItem2)) {
         // Обновляем поля элемента array1 согласно элементу array2
-        sessionsData.content.sessions[i] = { ...sessionsData.content.sessions[i], ...updatedCharacterData[j] };
+        sessionsData[i] = { ...sessionsData[i], ...updatedCharacterData[j] };
         break; // Выходим из цикла второго массива, так как нашли соответствие
     }
 }
 }
 
-const updatedContent = JSON.stringify(sessionsData.content, null, 2);
+const updatedContent = JSON.stringify(sessionsData, null, 2);
 
 // AJAX запрос для отправки данных на PHP скрипт
 var xhr = new XMLHttpRequest();
