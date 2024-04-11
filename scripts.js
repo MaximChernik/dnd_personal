@@ -29,20 +29,20 @@ item.items.forEach(item => {
 });
 });
 
-if (!Array.isArray(sessionsData) || !Array.isArray(updatedCharacterData)) {
+if (!Array.isArray(sessionsData.sessions) || !Array.isArray(updatedCharacterData)) {
 throw new Error('Invalid input data. Both inputs must be arrays.');
 }
 
 // Проходим по элементам первого массива
-for (let i = 0; i < sessionsData.length; i++) {
-const currentItem1 = sessionsData[i];
+for (let i = 0; i < sessionsData.sessions.length; i++) {
+const currentItem1 = sessionsData.sessions[i];
 // Проходим по элементам второго массива
 for (let j = 0; j < updatedCharacterData.length; j++) {
     const currentItem2 = updatedCharacterData[j];
     // Если sessionId и characterId совпадают
     if (compareObjects(currentItem1, currentItem2)) {
         // Обновляем поля элемента array1 согласно элементу array2
-        sessionsData[i] = { ...sessionsData[i], ...updatedCharacterData[j] };
+        sessionsData.sessions[i] = { ...sessionsData.sessions[i], ...updatedCharacterData[j] };
         break; // Выходим из цикла второго массива, так как нашли соответствие
     }
 }
@@ -67,7 +67,7 @@ xhr.onreadystatechange = function () {
 };
 
 xhr.send(JSON.stringify({ newContent: updatedContent }));
-
+checkFileChanges();
 
 
 
@@ -854,7 +854,10 @@ async function loadCharactersBySession() {
 
     try {
         // Загрузка данных из файла sessions.json с сервера
-        const response = await fetch('files/sessions.json');
+        const response = await fetch('files/sessions.json',
+        {
+            cache: 'no-cache' // Добавлен параметр для игнорирования кеша
+        });
         const sessionsData = await response.json();
 
         // Проверка на наличие данных и фильтрация по sessionId
@@ -900,6 +903,24 @@ function loadCharacterFromFile(characterData) {
     }
     charactersCharacteristics[characterId] = matchItemIcon(charactersCharacteristics[characterId], globalItems);
     addCharacter();
+}
+
+// Функция для длинного опроса
+async function checkFileChanges() {
+    try {
+        const response = await fetch('checkFileChanges.php');
+        const data = await response.json();
+        if (data.needsUpdate) {
+            // Загрузка нового файла сессий или выполнение других действий
+            console.log('Требуется загрузка нового файла сессий');
+            // Добавьте здесь код для загрузки нового файла сессий
+        }
+    } catch (error) {
+        console.error('Ошибка проверки изменений:', error);
+    } finally {
+        // Повторяем проверку через некоторый интервал времени
+        setTimeout(checkFileChanges, 5000); // Например, каждые 5 секунд
+    }
 }
 
 function saveCharacterToFile(characterId) {
